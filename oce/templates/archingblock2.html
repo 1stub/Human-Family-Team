@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/archingblocks.css') }}"
+  />
+
+  <div class="container text-left">
+    <div class="row align-items-start">
+      <h1>
+        <span class="arching-color">
+          Arching Block 2: The Visual, Musical & Performing Arts
+        </span>
+      </h1>
+
+      <img
+        src="{{ url_for('static', filename='images/archingblock2.jpg') }}"
+        class="img-fluid arching-image"
+        alt="Arching Block 2 illustration"
+      />
+    </div>
+  </div>
+{% endblock %}

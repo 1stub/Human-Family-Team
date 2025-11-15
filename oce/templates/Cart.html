@@ -2,10 +2,23 @@
 
 {% block content %}
 
+<script id="catalog-data" type="application/json">
+  {{ product_catalog | tojson }}
+</script>
+
+<script>
+  // Parse the JSON safely from the embedded script
+  const PRODUCT_CATALOG = JSON.parse(document.getElementById("catalog-data").textContent);
+  console.log("Loaded product catalog:", PRODUCT_CATALOG);
+</script>
+
+
+
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/Cart.css') }}"
 />
+
 
 <!-- <button id="back-button" class="back-button">Go Back</button> -->
 
@@ -112,38 +125,95 @@
   function loadCart() {
     const cartItemsContainer = document.getElementById("cart-items");
     const cartTotalContainer = document.getElementById("cart-total");
-    const hiddenCartInputs = document.getElementById("hidden-cart-inputs");
 
-    let cart = JSON.parse(localStorage.getItem("cart")) || []; // Retrieve cart from localStorage
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    // Clear previous cart data
     cartItemsContainer.innerHTML = "";
-    hiddenCartInputs.innerHTML = "";
     let total = 0;
 
-    // Render cart items and total
     cart.forEach((item, index) => {
+      const product = PRODUCT_CATALOG[item.id.toString()];
+      if (!product) return;
+
+      const itemPrice = product.price / 100;
+      const quantity = item.quantity || 1;
+      const itemTotal = itemPrice * quantity;
+
+      total += itemTotal;
+
       const itemDiv = document.createElement("div");
-      itemDiv.innerHTML = `<p>${item.name} - ${item.price}</p>`;
+      itemDiv.classList.add("cart-item");
+      itemDiv.innerHTML = `
+        <span class="item-name">${product.name}</span>
+        <div class="quantity-controls">
+          <button class="decrease-qty" data-index="${index}">−</button>
+          <input type="number" class="item-quantity-input" data-index="${index}" value="${quantity}" min="0">
+          <button class="increase-qty" data-index="${index}">+</button>
+        </div>
+        <span class="item-price">$${itemTotal.toFixed(2)}</span>
+      `;
+
       cartItemsContainer.appendChild(itemDiv);
-
-      // Add to total price
-      total += parseFloat(item.price.replace("$", ""));
-
-      // Add hidden input for each item to form
-      const hiddenInput = document.createElement("input");
-      hiddenInput.type = "hidden";
-      hiddenInput.name = `cart_items[${index}]`;
-      hiddenInput.value = `${item.name} (x${item.quantity}): ${item.price}`;
-      hiddenCartInputs.appendChild(hiddenInput);
     });
 
-    // Update cart total
     cartTotalContainer.textContent = `Total: $${total.toFixed(2)}`;
+
+    // Event listeners for quantity buttons
+    document.querySelectorAll(".increase-qty").forEach(button => {
+      button.addEventListener("click", (e) => {
+        const index = e.target.dataset.index;
+        updateQuantity(index, 1);
+      });
+    });
+
+    document.querySelectorAll(".decrease-qty").forEach(button => {
+      button.addEventListener("click", (e) => {
+        const index = e.target.dataset.index;
+        updateQuantity(index, -1);
+      });
+    });
+
+    // Event listeners for quantity input fields
+    document.querySelectorAll(".item-quantity-input").forEach(input => {
+      input.addEventListener("change", (e) => {
+        const index = e.target.dataset.index;
+        const newQuantity = parseInt(e.target.value, 10) || 0;
+        setQuantity(index, newQuantity);
+      });
+    });
+
+    function updateQuantity(index, change) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const newQuantity = (cart[index].quantity || 1) + change;
+
+      if (newQuantity <= 0) {
+        cart.splice(index, 1);
+      } else {
+        cart[index].quantity = newQuantity;
+      }
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      loadCart();
+    }
+
+    function setQuantity(index, quantity) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      if (quantity <= 0) {
+        cart.splice(index, 1);
+      } else {
+        cart[index].quantity = quantity;
+      }
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      loadCart();
+    }
   }
 
-  // Load cart on page load
   document.addEventListener("DOMContentLoaded", loadCart);
 </script>
+
+
+
 
 {% endblock %}

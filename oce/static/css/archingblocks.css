@@ -1,0 +1,14 @@
+/* Page-specific color (optional) */
+.arching-color {
+  color: #3366cc; /* pick your theme color */
+  font-weight: 900;
+}
+
+/* Make image fill width but preserve proportions */
+.arching-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 20px 0;
+  object-fit: contain; /* ensures no distortion */
+}

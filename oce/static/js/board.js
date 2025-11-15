@@ -124,9 +124,9 @@ function resetBlockLabel(e) {
 
     BLOCK_NAME.innerText = "";
 
-    CHARACTER_NAME.innerText = "Hezekiah";
+    CHARACTER_NAME.innerText = "Ambassadors";
     CHARACTER_PLURAL_S.innerText = "s";
-    CHARACTER_IMG.setAttribute("src", "/static/images/hezekiah2.png");
+    CHARACTER_IMG.setAttribute("src", "/static/images/ambassadors.jpg");
   }
 }
 

@@ -29,6 +29,24 @@ h2 {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quantity-controls button {
+  background-color: #ddd;
+  border: none;
+  padding: 4px 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.quantity-controls button:hover {
+  background-color: #bbb;
+}
+
 .cart-intro {
     text-align: center;
     margin-bottom: 20px;

@@ -1,0 +1,16 @@
+<div class="navigate-button mt-4">
+  <form 
+    action="{{ url_for('content.select_age') }}" 
+    method="post" 
+    class="d-flex align-items-center"
+    onsubmit="event.stopPropagation();"
+  >
+    <label for="age" class="me-2">Select Age:</label>
+    <select name="age" id="age" class="form-select w-auto me-2">
+      {% for i in range(0, 19) %}
+        <option value="{{ i }}" {% if selected_age == i %}selected{% endif %}>{{ i }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary">Go</button>
+  </form>
+</div>
