@@ -1,186 +1,198 @@
 {% extends 'base.html' %}
 
+{% block sidebar %}
+  <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style="width: 100%;">
+    <a class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+      <button class="btn btn-primary has-icon btn-block" type="button" data-toggle="modal" data-target="#threadModal" onclick="showModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             class="feather feather-plus mr-2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        NEW POST
+      </button>
+    </a>
+    <hr>
+  </div>
+{% endblock %}
+
 {% block content %}
-  <div class="row">
-    <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style="width: 280px;">
-      <a class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-        <button class="btn btn-primary has-icon btn-block" type="button" data-toggle="modal" data-target="#threadModal" onclick="showModal()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus mr-2">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-          NEW POST	
-        </button>
-      </a>
+  <div class="col-md-12">
+    <h3 style="padding-top: 3pt;">{{ selected_group_name or "Concept Exchange Chat" }}</h3>
 
-      <hr>
-
-      <!-- <span class="fs-4"> Filters </span>
-      <form action="/filter" method="post">
-        <div class="list-group">
-          <label class="list-group-item d-flex gap-2">
-            <input class="form-check-input flex-shrink-0" type="checkbox" name="block" value="block1" checked="">
-            <span>
-              Block 1:Healthy Place to Live and Learn
-            </span>
-          </label>
-          <label class="list-group-item d-flex gap-2">
-            <input class="form-check-input flex-shrink-0" type="checkbox" name="block" value="block2" checked="">
-            <span>
-              Block 2:Energy for Concentration
-            </span>
-          </label>
-          <label class="list-group-item d-flex gap-2">
-            <input class="form-check-input flex-shrink-0" type="checkbox" name="block" value="block3" checked="">
-            <span>
-              Block 3: Stability
-            </span>
-          </label>
-          <label class="list-group-item d-flex gap-2">
-            <input class="form-check-input flex-shrink-0" type="checkbox" name="block" value="block4" checked="">
-            <span>
-              Block 4: Practiced Perception
-            </span>
-          </label>
-          <label class="list-group-item d-flex gap-2">
-            <input class="form-check-input flex-shrink-0" type="checkbox" name="block" value="block5" checked="">
-            <span>
-              Block 5: Developed Abilties 
-            </span>
-          </label>
-          <label class="list-group-item d-flex gap-2">
-            <input class="form-check-input flex-shrink-0" type="checkbox" name="block" value="block6" checked="">
-            <span>
-              Block 6: Responsibility
-            </span>
-          </label>
-          <label class="list-group-item d-flex gap-2">
-            <input class="form-check-input flex-shrink-0" type="checkbox" name="block" value="block7" checked="">
-            <span>
-              Block 7: Discernment
-            </span>
-          </label>
-          <label class="list-group-item d-flex gap-2">
-            <input class="form-check-input flex-shrink-0" type="checkbox" name="block" value="block8" checked="">
-            <span>
-              Block 8:Resilience
-            </span>
-          </label>
-          <label class="list-group-item d-flex gap-2">
-            <input class="form-check-input flex-shrink-0" type="checkbox" name="block" value="block9" checked="">
-            <span>
-              Block 9: Functional Relationships
-            </span>
-          </label>
-
-          
-          <button type="button" onclick="checkAll()">Check All</button>
-          <button type="button" onclick="uncheckAll()">Uncheck All</button>
-          <button type="submit">Apply Filter</button>
-        </div>
-      </form> -->
-    </div>
-
-    <div class="modal fade" id="threadModal" tabindex="-1" aria-labelledby="threadModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="threadModalLabel">Create a New Post</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <form action="/create-post" method="post">
-                      <div class="mb-3">
-                          <label for="username" class="form-label">Your Name</label>
-                          <textarea class="form-control" id="username" name="add_username" rows="1" required></textarea>
-                          <label for="postContent" class="form-label">Post Content</label>
-                          <textarea class="form-control" id="postContent" name="post_content" rows="3" required></textarea>
-                      </div>
-                      <button id="postButton" class="btn btn-primary has-icon btn-block" type="button">Post</button> 
-                  </form>
-              </div>
-          </div>
-      </div>
-    </div>
-
-    <div class="col-md-9">
-      <div class="col-md-12">
+    <!-- Chat log -->
+    <div id="chat-box" class="mb-3 border rounded p-3"
+        style="height: 400px; overflow-y: auto; display: flex; flex-direction: column;">
       {% if posts %}
-        <h3>Concept Exchange Posts</h3>
-    
-        {% for post in posts %}
-          <div class="d-flex text-body-secondary pt-3" style="font-size: 1.5rem;">
-            <p class="pb-3 mb-0 small lh-sm border-bottom">
-                <strong class="d-block text-gray-dark">
-                    <a style="font-size: 1.2rem;">{{post.author_uuid}}</a>
-                </strong>
-                <span style="font-size: 1.1rem;">{{ post.text_content }}</span>
+        {% for post in posts|reverse %}
+          <div class="d-flex text-body-secondary pt-2" style="font-size: 1rem;">
+            <p class="pb-2 mb-0 small lh-sm border-bottom w-100">
+              <strong class="d-block text-gray-dark">{{ post.author_uuid }}</strong>
+              {{ post.text_content }}
             </p>
           </div>
         {% endfor %}
-
       {% else %}
-        <h2> Currently no posts </h2>
+        <p class="text-muted">No messages yet.</p>
       {% endif %}
+    </div>
+
+    <!-- Message controls -->
+    <div id="message-controls" class="mt-3">
+      <div class="d-flex align-items-center gap-2">
+        <label for="roleSelect" class="mb-0">Role:</label>
+        <select id="roleSelect" class="form-select w-auto" title="Select role">
+          <option value="user" selected>User</option>
+          <option value="admin">Admin</option>
+        </select>
+
+        <!-- For clarity: show a small badge when on announcements -->
+        {% if active_group == "announcement" %}
+          <span class="badge bg-warning text-dark ms-2">Announcements are admin-only</span>
+        {% endif %}
+      </div>
+
+      <!-- The input area — hidden on announcement unless admin selected -->
+      <div id="message-input" class="input-group mt-2" style="display: none;">
+        <input type="text" id="message" class="form-control" placeholder="Type your message..." />
+        <button id="sendButton" class="btn btn-primary">Send</button>
+      </div>
+
+      <!-- Non-admin announcement notice -->
+      <div id="no-posting-message" class="mt-2 text-muted" style="display: none;">
+        Only admins may post in Announcements.
       </div>
     </div>
   </div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const sendButton = document.getElementById('sendButton');
+  const messageInput = document.getElementById('message');
+  const chatBox = document.getElementById('chat-box');
+  const roleSelect = document.getElementById('roleSelect');
+  const messageInputWrapper = document.getElementById('message-input');
+  const noPostingMessage = document.getElementById('no-posting-message');
 
-  <script>
-    function checkAll() {
-      var checkboxes = document.getElementsByName('block');
-      for (var i = 0; i < checkboxes.length; i++) {
-        checkboxes[i].checked = true;
-      } 
-    }  
-    function uncheckAll() {
-      var checkboxes = document.getElementsByName('block');
-      for (var i = 0; i < checkboxes.length; i++) {
-        checkboxes[i].checked = false;
+  // determine whether current page is announcement (server passes active_group)
+  const activeGroup = "{{ active_group }}"; // Jinja renders this value
+
+  // initialize visibility
+  function updateInputVisibility() {
+    const role = roleSelect ? roleSelect.value : 'user';
+    if (activeGroup === "announcement") {
+      if (role === 'admin') {
+        messageInputWrapper.style.display = 'flex';
+        noPostingMessage.style.display = 'none';
+      } else {
+        messageInputWrapper.style.display = 'none';
+        noPostingMessage.style.display = 'block';
       }
+    } else {
+      // normal class forum — anyone can post (UI wise)
+      messageInputWrapper.style.display = 'flex';
+      noPostingMessage.style.display = 'none';
+    }
+  }
+
+  if (roleSelect) {
+    roleSelect.addEventListener('change', updateInputVisibility);
+  }
+  updateInputVisibility();
+
+  // scroll to bottom on load
+  if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+
+  async function sendMessage() {
+    const username = 'Anonymous'; // replace with session user when available
+    const content = messageInput.value.trim();
+    if (!content) {
+      alert('Please enter a message.');
+      return;
     }
 
-    function showModal() {
-        var modal = new bootstrap.Modal(document.getElementById('threadModal'));
-        modal.show();
+    // Decide is_announcement based on active group
+    const isAnnouncement = (activeGroup === "announcement");
+
+    // Client-side guard: prevent non-admin from posting to announcement
+    if (isAnnouncement && roleSelect && roleSelect.value !== 'admin') {
+      alert('Only admins may post to Announcements.');
+      return;
     }
 
-    document.getElementById('postButton').addEventListener('click', async () => {
-      const username = document.getElementById('username').value.trim();
-      const content = document.getElementById('postContent').value.trim();
-        console.log(content);
-      if(username === '') {
-        alert('Please enter your name before posting.');
-        return
-      }
-      else if (content === '') {
-        alert('Please enter a message before posting.');
-        return;
-      }
-
-      try {
-        const response = await fetch('/create_post', {
+    try {
+      const response = await fetch('/create_post', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username: username, text_content: content }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: username,
+          text_content: content,
+          is_announcement: isAnnouncement
+        }),
       });
 
-        const result = await response.json();
-        if (result.success) {
-          document.getElementById('postContent').value = '';
-          const modal = bootstrap.Modal.getInstance(document.getElementById('threadModal'));
-          modal.hide();
-          location.reload();
+      const result = await response.json();
+      if (response.ok && result.success) {
+        // clear input
+        messageInput.value = '';
+
+        // client-side append (optional)
+        const wrapper = document.createElement('div');
+        wrapper.className = 'd-flex text-body-secondary pt-2';
+        wrapper.style.fontSize = '1rem';
+        wrapper.innerHTML = `<p class="pb-2 mb-0 small lh-sm border-bottom w-100">
+          <strong class="d-block text-gray-dark">${username}</strong>
+          ${escapeHtml(content)}
+        </p>`;
+        if (chatBox) {
+          chatBox.appendChild(wrapper);
+          chatBox.scrollTop = chatBox.scrollHeight;
         } else {
-          alert('Failed to post your message.');
+          location.reload();
         }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred while posting your message.');
+      } else {
+        const err = result.error || 'Failed to post';
+        alert('Failed to send message: ' + err);
+      }
+    } catch (err) {
+      console.error(err);
+      alert('An error occurred.');
+    }
+  }
+
+  // click handler
+  if (sendButton) {
+    sendButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      sendMessage();
+    });
+  }
+
+  // Ctrl+Enter
+  if (messageInput) {
+    messageInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && e.ctrlKey) {
+        e.preventDefault();
+        sendMessage();
       }
     });
- </script>
-  
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>"'`=\/]/g, function(s) {
+      return ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+        '/': '&#x2F;',
+        '`': '&#x60;',
+        '=': '&#x3D;'
+      })[s];
+    });
+  }
+});
+</script>
+
 {% endblock %}
