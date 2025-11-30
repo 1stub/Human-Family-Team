@@ -7,6 +7,9 @@ click==8.1.7
 commitizen==4.4.1
 Flask==3.0.2
 Flask-Login==0.6.3
+Flask-Dance==7.1.0
+Flask-Mail==0.10.0
+Flask-Session==0.8.0
 Flask-WTF==1.2.1
 gunicorn
 iniconfig==2.0.0
@@ -23,7 +26,7 @@ pluggy==1.4.0
 pre-commit==4.1.0
 pycparser==2.21
 pytest==8.0.2
-pythondotenv==1.0.1
+python-dotenv==1.0.1
 setuptools==70.0.0
 requests==2.32.3
 Werkzeug==3.0.6
