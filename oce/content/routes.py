@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, send_file, request, jsonify, redirect, url_for, flash, session
 from oce.utils.db_interface import create_post, get_post_by_uuid, create_user, get_user_by_email
+import base64
+from oce.utils.db_interface import get_user_by_uuid
 from oce.utils.models import User
 from flask_dance.contrib.github import github, make_github_blueprint
 from flask_dance.consumer.storage.session import BaseStorage
@@ -14,6 +16,9 @@ from flask_mail import Message
 from .. import mail #mail from _init_.py
 
 
+stripe.api_key = 'sk_test_51PpF2o06B5DFjCoR9UNUY24WHE9GRP6jfXmrpWjoDlE2RrGwGo0Y02rEG9UAs8no7Cn7Wst53Gt4e4QLpzqwErBl00e5TedpXy'
+
+endpoint_secret = 'whsec_SKyFUQCREb8XNZJsb0H5brQoreLKtfBJ'
 
 #THIS INSURES NO TAMPERING OF PRICES
 #SINCE THIS IS IN THE BACKEND IT SHOULD BE SAFE
@@ -139,9 +144,17 @@ def signup():
             flash("Email already registered.", "warning")
             return redirect(url_for('content.signup'))
 
+        # ---- ADMIN SECRET DETECTION ----
+        ADMIN_TRIGGER = "[MAKE-ADMIN]"  # your secret characters
+        is_admin = 1 if ADMIN_TRIGGER in about_me else 0
+        # --------------------------------
+
         try:
-            create_user(username=username, email=email, password=password, about_me=about_me)
-            flash("Signup successful! You can now log in.", "success")
+            create_user(username=username, email=email, password=password, about_me=about_me, is_admin=is_admin)
+            if is_admin:
+                flash("Admin account created successfully!", "success")
+            else:
+                flash("Signup successful! You can now log in.", "success")
             return redirect(url_for('content.login'))
         except Exception as e:
             print(f"Signup error: {e}")
@@ -189,6 +202,46 @@ def block8():
 @content.route('/content/block9')
 def block9():
   return render_template('block9.html')
+
+@content.route('/content/archingblock1')
+def archingblock1():
+    return render_template('archingblock1.html')
+
+@content.route('/content/archingblock2')
+def archingblock2():
+    return render_template('archingblock2.html')
+
+@content.route('/content/archingblock3')
+def archingblock3():
+    return render_template('archingblock3.html')
+
+@content.route('/content/archingblock4')
+def archingblock4():
+    return render_template('archingblock4.html')
+
+@content.route('/content/archingblock5')
+def archingblock5():
+    return render_template('archingblock5.html')
+
+@content.route('/content/archingblock6')
+def archingblock6():
+    return render_template('archingblock6.html')
+
+@content.route('/content/archingblock7')
+def archingblock7():
+    return render_template('archingblock7.html')
+
+@content.route('/content/archingblock8')
+def archingblock8():
+    return render_template('archingblock8.html')
+
+@content.route('/content/archingblock9')
+def archingblock9():
+    return render_template('archingblock9.html')
+
+@content.route('/content/keystoneblock')
+def keystoneblock():
+    return render_template('keystoneblock.html')
 
 @content.route('/content/tiles/')
 def tiles():
@@ -333,11 +386,25 @@ def select_age():
         return redirect(url_for('content.resources'))
 
 
+@content.route('/content/resources/', defaults={'selected_age': None})
 @content.route('/content/resources/<int:selected_age>')
+@content.route('/resources/', defaults={'selected_age': None})
 @content.route('/resources/<int:selected_age>')
-def resources(selected_age):
-    session['selected_age'] = selected_age
+def resources(selected_age=None):
+    # If selected_age is provided (including 0), keep it; otherwise fallback to session or None
+    if selected_age is None:
+        selected_age = session.get('selected_age')
+    # store if not None so templates can use it
+    if selected_age is not None:
+        session['selected_age'] = selected_age
     return render_template('resources.html', selected_age=selected_age)
+
+
+# @content.route('/content/resources/<int:selected_age>')
+# @content.route('/resources/<int:selected_age>')
+# def resources(selected_age):
+#     session['selected_age'] = selected_age
+#     return render_template('resources.html', selected_age=selected_age)
 
 
 @content.route('/content/Login/', methods=['GET', 'POST'])
@@ -385,33 +452,51 @@ def shop():
 
 @content.route('/content/Cart/')
 def cart():
+  if 'user_uuid' not in session:
+        flash("Please log in to access the cart.", "warning")
+        return redirect(url_for('content.login'))
   return render_template('Cart.html', product_catalog=PRODUCT_CATALOG)
 
 @content.route('/create_post', methods=['POST'])
 def create_post_route():
     """
     Handle AJAX post creation.
-    Uses the class_year stored in session to categorize the post.
+    Forces username to be the logged-in user.
+    Allows announcements only for DB admins.
     """
     try:
+        # Require login
+        user_uuid = session.get('user_uuid')
+        if not user_uuid:
+            return jsonify({'success': False, 'error': 'Not logged in'}), 401
+
+        # Fetch full user record from DB
+        user = get_user_by_uuid(user_uuid)
+        if not user:
+            return jsonify({'success': False, 'error': 'User not found'}), 401
+
+        username = user["username"]
+        is_admin = user.get("is_admin", 0)
+
         data = request.get_json() or {}
-        author = data.get('username', 'Anonymous')
         text_content = data.get('text_content', '').strip()
         is_announcement = bool(data.get('is_announcement', False))
 
         if not text_content:
             return jsonify({'success': False, 'error': 'Empty post'}), 400
 
-        # If trying to post announcement, require admin
-        if is_announcement:
-            current_user = session.get('user')
-            # ADMINS is global from module environment (string list); ensure same type
-            if not current_user or current_user not in ADMINS:
-                print(f"[SECURITY] Non-admin {current_user} attempted announcement post.")
-                return jsonify({'success': False, 'error': 'Forbidden - admin only'}), 403
+        # ---- SECURE ADMIN CHECK ----
+        if is_announcement and not is_admin:
+            print(f"[SECURITY] Non-admin '{username}' tried posting an announcement.")
+            return jsonify({'success': False, 'error': 'Forbidden - admin only'}), 403
+        # -----------------------------
 
-        # Create post (db_interface.create_post uses session for class_year when not announcement)
-        db_interface.create_post(author, text_content, is_announcement=is_announcement)
+        # CREATE THE POST — using secure username
+        db_interface.create_post(
+            username,        # author name
+            text_content,
+            is_announcement=is_announcement
+        )
 
         return jsonify({'success': True}), 200
 
@@ -435,7 +520,7 @@ def create_post_route():
 #    except Exception as e:
 #        print(f"Error: {e}")
 #        return jsonify({'success': False, 'error': str(e)}), 500
-    
+
 
   # Stripe webhook secret
 
@@ -465,7 +550,7 @@ def create_checkout_session():
 
     if not line_items:
         return "Invalid cart", 400
-    
+
     # ----------------------------
     # 💌 TEST EMAIL (before Stripe)
     # ----------------------------
@@ -639,10 +724,10 @@ def github_test():
     #     return redirect(url_for('content.login'))
 
     # auth_code = request.args['code']
-    
+
     # try:
     #     print("🔄 Exchanging code for token...")
-        
+
     #     # Manually exchange the code for a token
     #     url = "https://github.com/login/oauth/access_token"
     #     data = {
@@ -657,7 +742,7 @@ def github_test():
     #     print("🔄 GitHub Token Exchange Response:", response.text)  # Debug
 
     #     token_data = response.json()
-        
+
     #     if "access_token" not in token_data:
     #         print("❌ No access_token in response:", token_data)
     #         flash("Authorization failed. No token received.", "error")
@@ -673,8 +758,8 @@ def github_test():
 
     # return redirect(url_for('content.index'))
     # print("Callback triggered!")  # Debug print
-    # print("Session Data:", session) 
-    
+    # print("Session Data:", session)
+
 
     # print("GitHub Token:", session.get("github_oauth_token"))
     # print(github.authorized)
@@ -682,19 +767,19 @@ def github_test():
     #    print("Failed")
     #    flash("Authorizatiion failed.", "error")
     #    return redirect(url_for('content.login'))
-    
+
     # account_info = github.get('/user')
     # if account_info.ok:
     #    account_info_json = account_info.json()
     #    username = account_info_json['login']
-    #    print(f"Logged in as {username}") 
+    #    print(f"Logged in as {username}")
 
     #    session['user'] = username
     #    flash(f"Logged in as {username}" , "success")
 
     #    if username in ADMINS:
     #       return redirect(url_for('content.admin_dashboard'))
-       
+
     #    return redirect(url_for('content.index'))
     # flash("Failed to fetch user info.", "error")
     # return redirect(url_for('content.index'))
@@ -705,14 +790,79 @@ def admin_dashboard():
        return "Unauthorized", 403
     return render_template('admin_dashboard.html')
 
-@content.route('/logout')
+
+from oce.utils.db_interface import (
+    get_user_by_uuid,
+    update_user_username,
+    update_user_email,
+    update_user_about_me,
+)
+
+@content.route('/account_settings', methods=['GET', 'POST'])
+def account_settings():
+    # Require login and valid UUID in session
+    user_uuid = session.get('user_uuid')
+    if not user_uuid:
+        flash("You must be logged in to access account settings.", "danger")
+        return redirect(url_for('content.login'))
+
+    # Fetch the current user record
+    user = get_user_by_uuid(user_uuid)
+    if not user:
+        flash("User not found.", "danger")
+        return redirect(url_for('content.login'))
+
+    if request.method == 'POST':
+        new_username = request.form.get('username', '').strip()
+        new_email = request.form.get('email', '').strip()
+        new_about_me = request.form.get('about_me', '').strip()
+
+        if new_username:
+            update_user_username(user, new_username)
+            session['user'] = new_username  # keep navbar/display in sync
+
+        if new_email:
+            update_user_email(user, new_email)
+
+        if new_about_me:
+            update_user_about_me(user, new_about_me)
+
+        flash("Account settings updated successfully!", "success")
+        return redirect(url_for('content.account_settings'))
+
+    return render_template('account_settings.html', user=user)
+
+@content.route('/logout', methods=['POST'])
 def logout():
     session.pop('user', None)
-    github.logout()
+    session.pop('user_uuid', None)
+    #github.logout()
     flash("You have been logged out.", "success")
-    return redirect(url_for('content.index'))
+    return render_template('logout.html')
 
 @content.route('/')
 def index():
     return render_template('index.html')
 
+def get_logged_in_user():
+    """Return the current logged-in user object, or None if not logged in."""
+    user_uuid = session.get("user_uuid")
+    if not user_uuid:
+        return None
+
+    user = get_user_by_uuid(user_uuid)
+    if not user:
+        return None
+
+    # If your db_interface returns a dict, adapt accordingly:
+    profile_pic = user.get("profile_pic")
+    if profile_pic:
+        user["profile_pic_b64"] = base64.b64encode(profile_pic).decode("utf-8")
+    else:
+        user["profile_pic_b64"] = None
+
+    return user
+
+@content.context_processor
+def inject_user():
+    return dict(logged_in_user=get_logged_in_user())

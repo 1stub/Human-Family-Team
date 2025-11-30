@@ -58,6 +58,7 @@ def create_user(
     password: str,
     profile_pic: bytes | None = None,
     about_me: str = '',
+    is_admin: int = 0,
 ) -> None:
     """Creates a new user in the database.
 
@@ -84,11 +85,13 @@ def create_user(
         password_hasher.hash(password),
         profile_pic,
         about_me,
-        now_est  # UTC timestamp
+        now_est,  # UTC timestamp
+        is_admin
     )
 
     cur.execute(
-        'INSERT INTO USERS VALUES(?, ?, ?, ?, ?, ?, ?);',
+        'INSERT INTO USERS '
+        ' VALUES (?, ?, ?, ?, ?, ?, ?, ?);',
         new_user_data,
     )
     con.commit()
@@ -245,57 +248,6 @@ def delete_user(user: User) -> None:
 
 # Methods for Posts.
 
-
-# def create_post(
-#     author: User,
-#     text_content: str,
-#     tag1: str,
-#     tag2: str,
-#     tag3: str,
-#     tag4: str,
-#     tag5: str,
-#     datetime: str,
-#     location: str,
-#     image: bytes | None = None,
-# ) -> None:
-#     """Create a new post for a user with tags and content.
-
-#     Args:
-#         author: Author of the post.
-#         text_content: Content of the post.
-#         tag1: Tag for the post.
-#         tag2: Tag for the post.
-#         tag3: Tag for the post.
-#         tag4: Tag for the post.
-#         tag5: Tag for the post.
-#         datetime: Date- and timestamp of the post.
-#         location: Location associated with the post.
-#         image: Optional image to associate with the post. Defaults to None.
-#     """
-#     con = get_db()
-#     cur = con.cursor()
-
-#     new_post_data = (
-#         str(create_uuid()),
-#         author.user_uuid,
-#         text_content,
-#         tag1,
-#         tag2,
-#         tag3,
-#         tag4,
-#         tag5,
-#         location,
-#         datetime,
-#         image,
-#     )
-
-#     cur.execute(
-#         'INSERT INTO POSTS VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);',
-#         new_post_data,
-#     )
-#     con.commit()
-
-
 #this is temorary, should be relpaced by the function above when the user acounts feature is added
 from flask import session
 from datetime import datetime
@@ -389,7 +341,7 @@ def get_announcements():
     rows = cur.fetchall()
     print(f"[DEBUG][get_announcements] Announcement count: {len(rows)}")
 
-    return cur.fetchall()
+    return rows
 
 
 def get_all_posts():

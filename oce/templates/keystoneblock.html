@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/keystoneblock.css') }}"
+  />
+
+  <div class="container text-left">
+    <div class="row align-items-start">
+      <h1>
+        <span class="keystone-color">
+          Keystone Block: Human Family Keystone Block!
+        </span>
+      </h1>
+
+      <img
+        src="{{ url_for('static', filename='images/keystoneblock.jpg') }}"
+        class="img-fluid keystone-image"
+        alt="Keystone Block illustration"
+      />
+    </div>
+  </div>
+{% endblock %}

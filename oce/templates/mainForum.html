@@ -39,13 +39,26 @@
     </div>
 
     <!-- Message controls -->
-    <div id="message-controls" class="mt-3">
-      <div class="d-flex align-items-center gap-2">
-        <label for="roleSelect" class="mb-0">Role:</label>
-        <select id="roleSelect" class="form-select w-auto" title="Select role">
-          <option value="user" selected>User</option>
-          <option value="admin">Admin</option>
-        </select>
+        <div id="message-controls" class="mt-3">
+          <div class="d-flex align-items-center gap-2">
+            {% if logged_in_user and logged_in_user.is_admin %}
+              <!-- Admins: only show Admin -->
+              <label for="roleSelect" class="mb-0">Role:</label>
+              <select id="roleSelect" class="form-select w-auto" title="Select role">
+                <option value="admin" selected>Admin</option>
+              </select>
+            {% elif logged_in_user %}
+              <!-- Logged-in users (non-admins) -->
+              <select id="roleSelect" class="d-none">
+                <option value="user" selected>User</option>
+              </select>
+            {% else %}
+              <!-- Not logged in: hide dropdown -->
+              <select id="roleSelect" class="d-none">
+                <option value="guest" selected>Guest</option>
+              </select>
+            {% endif %}
+          </div>
 
         <!-- For clarity: show a small badge when on announcements -->
         {% if active_group == "announcement" %}
@@ -61,7 +74,11 @@
 
       <!-- Non-admin announcement notice -->
       <div id="no-posting-message" class="mt-2 text-muted" style="display: none;">
-        Only admins may post in Announcements.
+          {% if not logged_in_user %}
+            You must be logged in to post.
+          {% elif active_group == "announcement" and (not logged_in_user.is_admin) %}
+            Only admins may post in Announcements.
+          {% endif %}
       </div>
     </div>
   </div>
@@ -71,51 +88,56 @@ document.addEventListener('DOMContentLoaded', () => {
   const messageInput = document.getElementById('message');
   const chatBox = document.getElementById('chat-box');
   const roleSelect = document.getElementById('roleSelect');
+  const isAdmin = {{ 'true' if logged_in_user and logged_in_user.is_admin else 'false' }};
   const messageInputWrapper = document.getElementById('message-input');
   const noPostingMessage = document.getElementById('no-posting-message');
 
-  // determine whether current page is announcement (server passes active_group)
-  const activeGroup = "{{ active_group }}"; // Jinja renders this value
+  const loggedInUser = {{ 'true' if logged_in_user else 'false' }};
+  const activeGroup = "{{ active_group }}";
 
-  // initialize visibility
   function updateInputVisibility() {
-    const role = roleSelect ? roleSelect.value : 'user';
+    if (!loggedInUser) {
+      messageInputWrapper.style.display = 'none';
+      noPostingMessage.style.display = 'block';
+      noPostingMessage.textContent = "You must be logged in to post.";
+      return;
+    }
+
+    // Logged-in users
     if (activeGroup === "announcement") {
-      if (role === 'admin') {
+      if (isAdmin) {
+        // Admins can post
         messageInputWrapper.style.display = 'flex';
         noPostingMessage.style.display = 'none';
       } else {
+        // Non-admins blocked
         messageInputWrapper.style.display = 'none';
         noPostingMessage.style.display = 'block';
+        noPostingMessage.textContent = "Only admins may post in Announcements.";
       }
     } else {
-      // normal class forum — anyone can post (UI wise)
+      // Normal chat — all logged-in users can post
       messageInputWrapper.style.display = 'flex';
       noPostingMessage.style.display = 'none';
     }
   }
 
-  if (roleSelect) {
-    roleSelect.addEventListener('change', updateInputVisibility);
-  }
   updateInputVisibility();
 
-  // scroll to bottom on load
+  // Scroll chat
   if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
 
   async function sendMessage() {
-    const username = 'Anonymous'; // replace with session user when available
+    const username = "{{ logged_in_user.username if logged_in_user else 'Anonymous' }}";
     const content = messageInput.value.trim();
     if (!content) {
       alert('Please enter a message.');
       return;
     }
 
-    // Decide is_announcement based on active group
     const isAnnouncement = (activeGroup === "announcement");
 
-    // Client-side guard: prevent non-admin from posting to announcement
-    if (isAnnouncement && roleSelect && roleSelect.value !== 'admin') {
+    if (isAnnouncement && !isAdmin) {
       alert('Only admins may post to Announcements.');
       return;
     }
@@ -133,26 +155,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const result = await response.json();
       if (response.ok && result.success) {
-        // clear input
         messageInput.value = '';
 
-        // client-side append (optional)
         const wrapper = document.createElement('div');
         wrapper.className = 'd-flex text-body-secondary pt-2';
         wrapper.style.fontSize = '1rem';
         wrapper.innerHTML = `<p class="pb-2 mb-0 small lh-sm border-bottom w-100">
-          <strong class="d-block text-gray-dark">${username}</strong>
-          ${escapeHtml(content)}
-        </p>`;
+            <strong class="d-block text-gray-dark">${username}</strong>
+            ${escapeHtml(content)}
+          </p>`;
         if (chatBox) {
           chatBox.appendChild(wrapper);
           chatBox.scrollTop = chatBox.scrollHeight;
-        } else {
-          location.reload();
         }
       } else {
-        const err = result.error || 'Failed to post';
-        alert('Failed to send message: ' + err);
+        alert('Failed to send message: ' + (result.error || 'Unknown error'));
       }
     } catch (err) {
       console.error(err);
@@ -160,7 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // click handler
   if (sendButton) {
     sendButton.addEventListener('click', (e) => {
       e.preventDefault();
@@ -168,7 +184,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Ctrl+Enter
   if (messageInput) {
     messageInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && e.ctrlKey) {
@@ -179,18 +194,16 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function escapeHtml(str) {
-    return str.replace(/[&<>"'`=\/]/g, function(s) {
-      return ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;',
-        '/': '&#x2F;',
-        '`': '&#x60;',
-        '=': '&#x3D;'
-      })[s];
-    });
+    return str.replace(/[&<>"'`=\/]/g, s => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+      '/': '&#x2F;',
+      '`': '&#x60;',
+      '=': '&#x3D;'
+    })[s]);
   }
 });
 </script>

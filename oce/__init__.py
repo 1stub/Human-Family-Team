@@ -28,12 +28,12 @@ def create_app():
         MAIL_USE_TLS=True,
         MAIL_USE_SSL=False,
         MAIL_USERNAME='noreply.catronrobotics@gmail.com',
-        MAIL_PASSWORD='',
+        MAIL_PASSWORD='uetdshtqplafynso',
         MAIL_DEFAULT_SENDER='noreply.catronrobotics@gmail.com'
     )
 
     Session(app)
-    
+
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     #Github OAuth config
     github_blueprint = make_github_blueprint()
@@ -46,7 +46,7 @@ def create_app():
     from oce.errors.handlers import errors
     from oce.forum.routes import forum
 
-    
+
     app.register_blueprint(accounts)
     app.register_blueprint(content)
     app.register_blueprint(errors)

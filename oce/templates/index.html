@@ -1,4 +1,4 @@
-<!-- 
+<!--
   WARNING: Formatters like Prettier that don't support Flask/Jinja
   may break the indenting in this file!
 -->
@@ -11,7 +11,7 @@
   rel="stylesheet"
   href="{{ url_for('static', filename='css/index.css') }}"
 />
-<!-- 
+<!--
   The home page is defined as a Bootstrap grid
   (https://getbootstrap.com/docs/5.3/layout/grid/)
 
@@ -24,12 +24,12 @@
   <div class="row align-items-center my-10 py-2-5">
     <!--
       At large resolutions, the title, board, and character have equal column widths (col-4)
-      At medium resolutions, display the title above (full col-12) and the board 
+      At medium resolutions, display the title above (full col-12) and the board
       and character below (each with col-6)
       At small resolutions, display each with full width (col-12) so they stack
     -->
     <div class="col-12 col-md-12 col-lg-4">
-      <!-- 
+      <!--
         At smaller resolutions, display the title with text centered
         At larger resolutions, display it with text justified left (aka "start")
       -->
@@ -53,13 +53,13 @@
         class="d-flex flex-column align-items-center text-center"
       >
         <img
-          src="{{ url_for('static', filename='images/hezekiah2.png') }}"
+          src="{{ url_for('static', filename='images/ambassadors.jpg') }}"
           id="character-img"
           class="img-fluid w-75 pb-5"
           alt="A drawing of a character inviting you to learn about each block!"
         />
         <div id="board-description-wrapper">
-          <h5 id="character-name" class="d-inline">Hezekiah</h5>
+          <h5 id="character-name" class="d-inline">Ambassadors</h5>
           <span class="d-inline"
             >invite<span id="character-plural-s">s</span> you to learn more
             about
@@ -189,7 +189,7 @@
 
   <div class="row justify-content-center text-start mb-5 py-10">
     <div class="col-12 col-lg-4 mb-4">
-      <!-- 
+      <!--
         A nested grid is used so the two cards on the left and right
         can stack even in full width. There is a "row" within the col-4
         where each card takes up the full width, making them stack
@@ -284,10 +284,10 @@
     </div>
   </div>
 
-  <!-- 
+  <!--
   Accordians in Bootstrap require dense HTML and CSS for each
   element, so a for-loop is used here to loop over each round
-  
+
   Note: the class names and ID's are sensitive, if changed
   they should all be changed to be uniform
 -->
@@ -433,7 +433,7 @@
         {% endfor %}
       </div>
     </div>
-        
+
     <!-- Make the tile board image appear before the accordian at smaller screen sizes -->
     <div class="col-12 col-lg-6 mb-4 order-0 order-lg-1 d-flex flex-column align-items-center">
       <img
