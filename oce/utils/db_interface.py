@@ -49,6 +49,11 @@ def get_db() -> sql.Connection:
     return db
 
 
+def close_db(e=None):
+    db = g.pop('db', None)
+    if db is not None:
+        db.close()
+
 # Methods for Users
 
 
@@ -572,20 +577,27 @@ def update_post_location(post: Post, location: str) -> None:
     con.commit()
 
 
-def delete_post(post: Post) -> None:
-    """Delete a post.
-
-    Args:
-        post: Post to delete.
-    """
+def delete_post(post_uuid):
     con = get_db()
-    cur = con.cursor()
-
-    cur.execute(
-        'DELETE FROM POSTS WHERE post_uuid = ?;',
-        (post.post_uuid,),
-    )
+    cursor = con.cursor()
+    cursor.execute("DELETE FROM POSTS WHERE post_uuid = ?", (post_uuid,))
     con.commit()
+
+
+# def delete_post(post: Post) -> None:
+#     """Delete a post.
+
+#     Args:
+#         post: Post to delete.
+#     """
+#     con = get_db()
+#     cur = con.cursor()
+
+#     cur.execute(
+#         'DELETE FROM POSTS WHERE post_uuid = ?;',
+#         (post.post_uuid,),
+#     )
+#     con.commit()
 
 
 # Methods for Comments.

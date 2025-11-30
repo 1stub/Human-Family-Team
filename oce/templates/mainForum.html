@@ -26,12 +26,33 @@
         style="height: 400px; overflow-y: auto; display: flex; flex-direction: column;">
       {% if posts %}
         {% for post in posts|reverse %}
-          <div class="d-flex text-body-secondary pt-2" style="font-size: 1rem;">
+        
+        <!-- Each post -->
+        <div class="d-flex justify-content-between text-body-secondary pt-2" style="font-size: 1rem;">
+          <!-- LEFT: post content -->
+          <p class="pb-2 mb-0 small lh-sm border-bottom w-100">
+            <strong class="d-block text-gray-dark">{{ post.author_uuid }}</strong>
+            {{ post.text_content }}
+          </p>
+
+          <!-- RIGHT: delete button (admins only) -->
+          {% if logged_in_user and logged_in_user.is_admin %}
+            <button class="btn btn-sm btn-danger ms-2 delete-post-btn"
+                    data-post-id="{{ post.post_uuid }}"
+                    title="Delete post">
+                ✖
+            </button>
+          {% endif %}
+        </div>
+
+<!--
+        <div class="d-flex text-body-secondary pt-2" style="font-size: 1rem;">
             <p class="pb-2 mb-0 small lh-sm border-bottom w-100">
               <strong class="d-block text-gray-dark">{{ post.author_uuid }}</strong>
               {{ post.text_content }}
             </p>
-          </div>
+          </div>        
+-->
         {% endfor %}
       {% else %}
         <p class="text-muted">No messages yet.</p>
@@ -83,6 +104,9 @@
     </div>
   </div>
 <script>
+// ---------------------------------------------
+// SEND MESSAGE
+// ---------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
   const sendButton = document.getElementById('sendButton');
   const messageInput = document.getElementById('message');
@@ -206,6 +230,31 @@ document.addEventListener('DOMContentLoaded', () => {
     })[s]);
   }
 });
+
+// ---------------------------------------------
+// DELETE POST (admin only)
+// ---------------------------------------------
+document.addEventListener("click", function(e) {
+    if (!e.target.classList.contains("delete-post-btn")) return;
+
+    const postId = e.target.getAttribute("data-post-id");
+
+    if (!confirm("Are you sure you want to delete this post?")) return;
+
+    fetch(`/delete_post/${postId}`, {
+        method: "POST"
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert("Failed to delete post: " + data.error);
+        }
+    })
+    .catch(err => alert("Error deleting post"));
+});
+
 </script>
 
 {% endblock %}

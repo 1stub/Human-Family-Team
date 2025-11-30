@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, send_file, request, jsonify, redirect, url_for, flash, session
 from oce.utils.db_interface import create_post, get_post_by_uuid, create_user, get_user_by_email
 import base64
-from oce.utils.db_interface import get_user_by_uuid
+from oce.utils.db_interface import get_user_by_uuid, delete_post
 from oce.utils.models import User
 from flask_dance.contrib.github import github, make_github_blueprint
 from flask_dance.consumer.storage.session import BaseStorage
@@ -321,38 +321,6 @@ def announcements():
 from datetime import datetime
 from flask import request, redirect, url_for, flash, session
 
-# @content.route('/select_age', methods=['POST'])
-# def select_age():
-#     """Handle age selection and redirect to the appropriate Concept Exchange forum."""
-#     try:
-#         age = int(request.form.get('age', 0))
-#         print(f"[DEBUG] Received age from form: {age}")
-
-#         # Validate the age
-#         if age <= 0:
-#             flash("Please select a valid age.", "warning")
-#             print("[DEBUG] Invalid age submitted — redirecting to resources.")
-#             return redirect(url_for('content.resources'))
-
-#         # Compute "Class of XXXX"
-#         current_year = datetime.now().year
-#         class_year = current_year + (18 - age)
-#         print(f"[DEBUG] Current year: {current_year}, Computed class year: {class_year}")
-
-#         # Store both in the Flask session
-#         session['selected_age'] = age
-#         session['selected_class_year'] = class_year
-#         session.modified = True   # ensures persistence
-#         print(f"[DEBUG] Session updated: {dict(session)}")
-
-#         # Redirect to the Concept Exchange forum
-#         return redirect(url_for('content.concept_exchange'))
-
-#     except Exception as e:
-#         print(f"[ERROR] Exception in select_age: {e}")
-#         flash("An error occurred while processing your selection.", "danger")
-#         return redirect(url_for('content.resources'))
-
 @content.route('/select_age', methods=['POST'])
 def select_age():
     """Handle age selection and redirect to the appropriate Concept Exchange forum."""
@@ -361,7 +329,7 @@ def select_age():
         print(f"[DEBUG] Received age from form: {age}")
 
         # Validate the age
-        if age <= 0:
+        if age < 0:
             flash("Please select a valid age.", "warning")
             print("[DEBUG] Invalid age submitted — redirecting to resources.")
             return redirect(url_for('content.resources'))
@@ -520,6 +488,55 @@ def create_post_route():
 #    except Exception as e:
 #        print(f"Error: {e}")
 #        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@content.route('/delete_post/<post_uuid>', methods=['POST'])
+def delete_post_route(post_uuid):
+
+    user_uuid = session.get("user_uuid")
+    if not user_uuid:
+        return {"success": False, "error": "Not logged in"}, 403
+
+    user = get_user_by_uuid(user_uuid)
+    if not user or user['is_admin'] != 1:
+        return {"success": False, "error": "Not authorized"}, 403
+
+    post = get_post_by_uuid(post_uuid)
+    if not post:
+        return {"success": False, "error": "Post not found"}, 404
+
+    # FIX: db_interface.delete_post() expects a post_uuid, not a dict
+    delete_post(post['post_uuid'])
+
+    return {"success": True}
+
+# @content.route('/delete_post/<post_uuid>', methods=['POST'])
+# def delete_post_route(post_uuid):
+#     from oce.utils.db_interface import get_post_by_uuid, delete_post
+#     from flask import session
+
+#     print("ADMINS LIST:", ADMINS)
+#     print("CURRENT USER:", session.get("user"))
+
+    
+#     # Check logged in
+#     current_user = session.get("user")
+#     if not current_user:
+#         return {"success": False, "error": "Not logged in"}, 403
+
+#     # Check admin
+#     if current_user not in ADMINS:
+#         return {"success": False, "error": "Not authorized"}, 403
+
+#     # Fetch post
+#     post = get_post_by_uuid(post_uuid)
+#     if not post:
+#         return {"success": False, "error": "Post not found"}, 404
+
+#     # Delete post
+#     delete_post(post)
+#     return {"success": True}
+
 
 
   # Stripe webhook secret
