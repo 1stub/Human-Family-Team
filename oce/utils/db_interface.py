@@ -326,6 +326,11 @@ def delete_post_by_uuid(post_uuid: str) -> None:
     cur.execute("DELETE FROM POSTS WHERE post_uuid = ?;", (post_uuid,))
     con.commit()
 
+def delete_post(post_uuid: str) -> None:
+    con = get_db()
+    cur = con.cursor()
+    cur.execute("DELETE FROM POSTS WHERE post_uuid = ?;", (post_uuid,))
+    con.commit()
 
 # ----------------------
 # Comments
