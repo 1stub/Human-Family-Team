@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, send_file, request, jsonify, redirect, url_for, flash, session
+from flask import Blueprint, render_template, send_file, request, jsonify, redirect, url_for, flash, session, current_app
 from oce.utils.db_interface import create_post, get_post_by_uuid, create_user, get_user_by_email
 import base64
 from oce.utils.db_interface import get_user_by_uuid, delete_post
@@ -14,14 +14,12 @@ import re
 from .. import password_hasher #argon2
 from flask_mail import Message
 from .. import mail #mail from _init_.py
-
+from oce.utils import db_interface
+from datetime import datetime
 
 stripe.api_key = 'sk_test_51PpF2o06B5DFjCoR9UNUY24WHE9GRP6jfXmrpWjoDlE2RrGwGo0Y02rEG9UAs8no7Cn7Wst53Gt4e4QLpzqwErBl00e5TedpXy'
 
 endpoint_secret = 'whsec_SKyFUQCREb8XNZJsb0H5brQoreLKtfBJ'
-from .. import password_hasher #argon2
-from flask_mail import Message
-from .. import mail #mail from _init_.py
 
 
 stripe.api_key = 'sk_test_51PpF2o06B5DFjCoR9UNUY24WHE9GRP6jfXmrpWjoDlE2RrGwGo0Y02rEG9UAs8no7Cn7Wst53Gt4e4QLpzqwErBl00e5TedpXy'
@@ -132,43 +130,53 @@ content.register_blueprint(github_blueprint, url_prefix='/github_login')
 
 
 @content.route('/content/SignupPage', methods=['GET', 'POST'])
-def signup():
+def signup():  # ← Function name MUST be 'signup' to match url_for('content.signup')
     if request.method == 'POST':
-        username = request.form.get('username', '').strip()
-        email = request.form.get('email', '').strip()
-        password = request.form.get('password', '').strip()
-        about_me = request.form.get('about_me', '').strip()
-
-        # Basic validation
-        if not username or not email or not password:
-            flash("All fields are required.", "danger")
-            return redirect(url_for('content.signup'))
-
-        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
-            flash("Invalid email format.", "danger")
-            return redirect(url_for('content.signup'))
-
-        if get_user_by_email(email):
-            flash("Email already registered.", "warning")
-            return redirect(url_for('content.signup'))
-
-        # ---- ADMIN SECRET DETECTION ----
-        ADMIN_TRIGGER = "[MAKE-ADMIN]"  # your secret characters
-        is_admin = 1 if ADMIN_TRIGGER in about_me else 0
-        # --------------------------------
-
         try:
-            create_user(username=username, email=email, password=password, about_me=about_me, is_admin=is_admin)
-            if is_admin:
-                flash("Admin account created successfully!", "success")
-            else:
-                flash("Signup successful! You can now log in.", "success")
+            # Get form data - match the new HTML field names
+            username = request.form.get('name', '').strip()  # 'name' not 'username'
+            email = request.form.get('email', '').strip()
+            password = request.form.get('password', '').strip()
+            role = request.form.get('role', '').strip()  # 'role' not 'about_me'
+
+            # Basic validation
+            if not username or not email or not password or not role:
+                flash("All fields are required.", "danger")
+                return redirect(url_for('content.signup'))
+
+            # Validate email format
+            if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+                flash("Invalid email format.", "danger")
+                return redirect(url_for('content.signup'))
+
+            # Validate role
+            if role not in ['student', 'family', 'teacher']:
+                flash("Invalid role selected.", "danger")
+                return redirect(url_for('content.signup'))
+
+            # Check duplicate email
+            if get_user_by_email(email):
+                flash("Email already registered.", "warning")
+                return redirect(url_for('content.signup'))
+
+            # Create user - store role in about_me
+            create_user(
+                username=username,
+                email=email,
+                password=password,
+                about_me=f"Role: {role}"
+            )
+
+            flash("Signup successful! You can now log in.", "success")
             return redirect(url_for('content.login'))
+
         except Exception as e:
-            print(f"Signup error: {e}")
-            flash("An error occurred during signup.", "danger")
+            import traceback
+            traceback.print_exc()
+            flash(f"An error occurred during signup: {e}", "danger")
             return redirect(url_for('content.signup'))
 
+    # GET request - render the signup page
     return render_template('SignupPage.html')
 
 @content.route('/content/success')
@@ -255,8 +263,6 @@ def keystoneblock():
 def tiles():
     return send_file('static/docs/Human-Domino-Effect-Footprint-Tiles.pdf', download_name='Human-Domino-Effect-Footprint-Tiles.pdf')
 
-from flask import render_template, session
-from oce.utils import db_interface
 
 @content.route('/content/ConceptExchange/')
 @content.route('/content/ConceptExchange/<group_id>')
@@ -326,8 +332,6 @@ def announcements():
         is_announcement_page=True
     )
 
-from datetime import datetime
-from flask import request, redirect, url_for, flash, session
 
 @content.route('/select_age', methods=['POST'])
 def select_age():
@@ -611,7 +615,6 @@ def create_checkout_session():
 # ----------------------------
 # STRIPE WEBHOOK
 # ----------------------------
-from flask import current_app
 
 @content.route("/webhook", methods=["POST"])
 def stripe_webhook():
@@ -714,30 +717,30 @@ Please forward this to maggie@southlandprint.com
 #           return f'<h1>Your GitHub name is {account_info_json["login"]}</h1>'
 #     return'<h1>Request failed!<h1>'
 
-@content.route("/github_login")
-def login_github():
-    if not github.authorized:
-        return redirect(url_for("github.login"))  # this triggers OAuth flow
+# @content.route("/github_login")
+# def login_github():
+#     if not github.authorized:
+#         return redirect(url_for("github.login"))  # this triggers OAuth flow
 
-    resp = github.get("/user")
-    if not resp.ok:
-        flash("Failed to fetch user info.", "error")
-        return redirect(url_for("content.login"))
+#     resp = github.get("/user")
+#     if not resp.ok:
+#         flash("Failed to fetch user info.", "error")
+#         return redirect(url_for("content.login"))
 
-    username = resp.json()["login"]
-    session["user"] = username
-    flash(f"Logged in as {username}", "success")
+#     username = resp.json()["login"]
+#     session["user"] = username
+#     flash(f"Logged in as {username}", "success")
 
-    if username in ADMINS:
-        return redirect(url_for("content.admin_dashboard"))
+#     if username in ADMINS:
+#         return redirect(url_for("content.admin_dashboard"))
 
-    return redirect(url_for("content.index"))
+#     return redirect(url_for("content.index"))
 
-@content.route("/github_test")
-def github_test():
-    print("Authorized:", github.authorized)
-    print("Token:", github.token)
-    return "Check terminal"
+# @content.route("/github_test")
+# def github_test():
+#     print("Authorized:", github.authorized)
+#     print("Token:", github.token)
+#     return "Check terminal"
 
 # @content.route('/github_callback')
 # def github_callback():
@@ -879,13 +882,6 @@ def get_logged_in_user():
     user = get_user_by_uuid(user_uuid)
     if not user:
         return None
-
-    # If your db_interface returns a dict, adapt accordingly:
-    profile_pic = user.get("profile_pic")
-    if profile_pic:
-        user["profile_pic_b64"] = base64.b64encode(profile_pic).decode("utf-8")
-    else:
-        user["profile_pic_b64"] = None
 
     return user
 

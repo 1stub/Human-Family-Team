@@ -127,17 +127,6 @@
           <li class="nav-item"><h5><a href="{{ url_for('content.contact') }}" class="nav-link">Contact</a></h5></li>
           <li class="nav-item"><h5><a href="{{ url_for('content.shop') }}" class="nav-link">Shop</a></h5></li>
 
-          <!-- PROFILE PICTURE -->
-          {% if logged_in_user and logged_in_user.profile_pic_b64 %}
-            <a href="{{ url_for('content.account_settings') }}">
-              <img src="data:image/jpeg;base64,{{ logged_in_user.profile_pic_b64 }}" class="rounded-circle" width="40" height="40">
-            </a>
-          {% else %}
-            <a href="{{ url_for('content.login') }}">
-              <img src="{{ url_for('static', filename='images/default_profile.png') }}" class="rounded-circle" width="40" height="40">
-            </a>
-          {% endif %}
-
           <!-- SHOPPING CART -->
           <li class="nav-item" style="margin-left:auto; position:relative;">
             <a href="{{ url_for('content.cart') }}" class="nav-link">

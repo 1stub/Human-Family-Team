@@ -2,17 +2,18 @@
 body {
     background: #f4f6f9;
     font-family: Arial, Helvetica, sans-serif;
-    margin: 0;
-    padding: 0;
 }
 
 /* Wrapper to center the form */
-.container {
+.signup-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
     align-items: center;
 }
 
-/* Main form container */
-.form-section {
+/* Main container */
+.signup-container {
     background: white;
     padding: 40px 35px;
     width: 100%;
@@ -22,14 +23,12 @@ body {
 }
 
 /* Header */
-.form-section h2 {
+.signup-header h1 {
     margin-bottom: 5px;
     text-align: center;
-    font-weight: 700;
-    color: #343a40;
 }
 
-.form-section p {
+.signup-header p {
     color: #666;
     text-align: center;
     font-size: 14px;
@@ -37,14 +36,14 @@ body {
 }
 
 /* Form layout */
-.login-form {
+.signup-form {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
 /* Form groups */
-.mb-3 {
+.form-group {
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -55,8 +54,8 @@ body {
     font-weight: 600;
 }
 
-/* Inputs */
-.form-control {
+/* Inputs & Select */
+.form-input {
     padding: 10px 12px;
     border-radius: 6px;
     border: 1px solid #d6d6d6;
@@ -65,20 +64,13 @@ body {
     transition: 0.2s ease-in-out;
 }
 
-.form-control:focus {
+.form-input:focus {
     border-color: #2d7ff9;
     box-shadow: 0 0 0 2px rgba(45,127,249,0.15);
 }
 
-/* Checkbox */
-.form-check-label {
-    font-size: 14px;
-    color: #495057;
-    margin-left: 0.25rem;
-}
-
 /* Submit button */
-.btn-primary {
+.btn-submit {
     margin-top: 10px;
     padding: 12px;
     border-radius: 8px;
@@ -89,21 +81,30 @@ body {
     font-weight: bold;
     cursor: pointer;
     transition: 0.2s ease-in-out;
-    width: 100%;
 }
 
-.btn-primary:hover {
+.btn-submit:hover {
     background: #1b5fc5;
 }
 
-/* Footer / Note */
-.text-muted {
+/* Footer */
+.form-footer {
     text-align: center;
-    font-size: 14px;
     margin-top: 15px;
+    font-size: 14px;
 }
 
-/* Flash Messages */
+.form-footer a {
+    text-decoration: none;
+    color: #2d7ff9;
+    font-weight: bold;
+}
+
+.form-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Flash Messages (Bootstrap-like) */
 .alert {
     padding: 10px 12px;
     margin-bottom: 15px;

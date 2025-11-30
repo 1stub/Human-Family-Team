@@ -1,102 +1,50 @@
-<!-- WARNING:
- This page is NOT production safe yet.
- It should be integrated with WTForms or another secure
- form library for safe password handling. It also
- needs an anti-spam mechanism and features to prevent
- XSS and injection attacks.
- -->
 {% extends 'base.html' %}
 {% block content %}
-<link
-    rel="stylesheet"
-    href="{{ url_for('static', filename='css/LoginPage.css') }}"
-/>
 
-<head>
-    <title>Login - Human Domino Project</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body {
-            padding-top: 100px;
-            scroll-behavior: smooth;
-        }
-        .section {
-            padding: 50px 0;
-        }
-        .hidden {
-            display: none;
-        }
-    </style>
-</head>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/LoginPage.css') }}" />
 
-<body>
-    <div class="container mt-5">
-        <h1 class="mb-4">Login to the Human Domino Project!</h1>
-        
-        <!-- Traditional Login Form -->
-        <div class="form-section">
-            <h2 class="mb-3">Login</h2>
-            
-            <!-- Flash Messages -->
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+<div class="container mt-5">
 
-            <form name="LoginForm" action=""{{ url_for('content.login') }}"" method="post" class="login-form">
-                
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email:</label>
-                    <input
-                        type="email"
-                        class="form-control"
-                        id="email"
-                        name="email"
-                        placeholder="Enter your email"
-                        required
-                        autocomplete="email"
-                        aria-required="true"
-                    />
-                </div>
+    <div class="form-section">
+        <h2 class="mb-3">Login</h2>
 
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password:</label>
-                    <input
-                        type="password"
-                        class="form-control"
-                        id="password"
-                        name="password"
-                        placeholder="Enter your password"
-                        required
-                        autocomplete="current-password"
-                        aria-required="true"
-                    />
-                </div>
-
-                <div class="mb-3">
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="remember_me" name="remember_me">
-                        <label class="form-check-label" for="remember_me">
-                            Remember me
-                        </label>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
                     </div>
-                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
-                <button type="submit" class="btn btn-primary w-100">Login</button>
-            </form>
+        <form action="{{ url_for('content.login') }}" method="post" class="login-form">
 
-            <p class="text-center mt-4 text-muted">
-                <small>Note: User authentication is not yet implemented. This is a placeholder form.</small>
-            </p>
-        </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" class="form-control" 
+                       id="email" name="email" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" class="form-control" 
+                       id="password" name="password" required>
+            </div>
+
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="remember_me" name="remember_me">
+                <label class="form-check-label" for="remember_me">Remember me</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+
+        <p class="text-center mt-4 text-muted">
+            <small>Note: User authentication is not yet implemented.</small>
+        </p>
     </div>
-</body>
+
+</div>
 
 {% endblock %}
