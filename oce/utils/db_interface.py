@@ -165,42 +165,36 @@ def delete_user(user: User) -> None:
 # ----------------------
 # Posts
 # ----------------------
-def create_post(author: str, text_content: str, is_announcement: bool = False) -> None:
-    """
-    Create a new post (temporary version without full user accounts).
-    Stores class_year from the current session selection if not an announcement.
-    """
+def create_post(author: str, text_content: str, is_announcement: bool = False) -> str:
     class_year = session.get("selected_class_year") if not is_announcement else None
     con = get_db()
     cur = con.cursor()
 
-    # Provide default tag placeholders and image=None, location=None
+    post_uuid = str(create_uuid())
+
     new_post_data = (
-        str(create_uuid()),  # post_uuid
-        author,  # author_uuid or placeholder
+        post_uuid,          # post_uuid
+        author,             # author_uuid or placeholder
         text_content,
-        None,  # tag1
-        None,  # tag2
-        None,  # tag3
-        None,  # tag4
-        None,  # tag5
-        None,  # image
-        datetime.now().isoformat(),  # datetime
-        None,  # location
+        None, None, None, None, None,
+        None,               # image
+        datetime.now().isoformat(),
+        None,               # location
         class_year,
         int(is_announcement),
     )
 
-    cur.execute(
-        """
+    cur.execute("""
         INSERT INTO POSTS (
             post_uuid, author_uuid, text_content, tag1, tag2, tag3, tag4, tag5,
             image, datetime, location, class_year, is_announcement
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-        """,
-        new_post_data,
-    )
+    """, new_post_data)
+
     con.commit()
+
+    return post_uuid   # ← RETURN IT
+
 
 
 def get_posts_for_class(class_year=None):

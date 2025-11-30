@@ -468,13 +468,14 @@ def create_post_route():
         # -----------------------------
 
         # CREATE THE POST — using secure username
-        db_interface.create_post(
-            username,        # author name
+        post_uuid = db_interface.create_post(
+            username,
             text_content,
             is_announcement=is_announcement
         )
 
-        return jsonify({'success': True}), 200
+        return jsonify({'success': True, 'post_uuid': post_uuid}), 200
+
 
     except Exception as e:
         print(f"[ERROR] Failed to create post: {e}")
