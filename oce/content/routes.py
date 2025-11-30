@@ -19,6 +19,14 @@ from .. import mail #mail from _init_.py
 stripe.api_key = 'sk_test_51PpF2o06B5DFjCoR9UNUY24WHE9GRP6jfXmrpWjoDlE2RrGwGo0Y02rEG9UAs8no7Cn7Wst53Gt4e4QLpzqwErBl00e5TedpXy'
 
 endpoint_secret = 'whsec_SKyFUQCREb8XNZJsb0H5brQoreLKtfBJ'
+from .. import password_hasher #argon2
+from flask_mail import Message
+from .. import mail #mail from _init_.py
+
+
+stripe.api_key = 'sk_test_51PpF2o06B5DFjCoR9UNUY24WHE9GRP6jfXmrpWjoDlE2RrGwGo0Y02rEG9UAs8no7Cn7Wst53Gt4e4QLpzqwErBl00e5TedpXy'
+
+endpoint_secret = 'whsec_SKyFUQCREb8XNZJsb0H5brQoreLKtfBJ'
 
 #THIS INSURES NO TAMPERING OF PRICES
 #SINCE THIS IS IN THE BACKEND IT SHOULD BE SAFE
