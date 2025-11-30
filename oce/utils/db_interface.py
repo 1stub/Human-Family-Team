@@ -25,6 +25,13 @@ def _dict_factory(cursor: sql.Cursor, row: Sequence) -> DatabaseRow:
     return d
 
 
+def close_db(e=None):
+    """Close the database connection at the end of a request."""
+    db = g.pop('_database', None)
+
+    if db is not None:
+        db.close()
+
 def get_db() -> sql.Connection:
     """Retrieve the database connection from the app.
 
