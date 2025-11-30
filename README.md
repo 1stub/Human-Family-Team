@@ -1,12 +1,37 @@
-# CS499 Capstone Project - Online Concept Exhange for the Human Domino Effect
+# CS499 Capstone Project - Human Family Team Website
 
 <img width="1792" alt="Screenshot 2024-09-18 at 10 17 44 PM" src="https://github.com/user-attachments/assets/555da853-d665-449b-8a32-1b54bee5395f">
 
-## Setting up the Python Virtual Environment
+A web application aimed towards teachers, students and their families that serves as a hub for discussions, resources and ecommerce.
 
-Codebase will be built against Python 3.12.1 (the most recent version of Python at the time of writing).
+## Running the Project
 
-Python ships with the builtin `venv` module. Reference the [documentation tutorial](https://docs.python.org/3/tutorial/venv.html) on `venv` for setting things up and using the virtual environment.
+### Clone the Project
+
+```
+git clone https://github.com/paryal58/humanFamilyTeam.git humanFamilyTeam
+```
+
+### Open the Project Folder
+```
+cd humanFamilyTeam
+```
+
+### Set up the Python Virtual Environment
+
+Create virtual environment.
+⚠️ **Warning:** Python 3.11 is the recommended to ensure everything is running properly.
+```
+python3.11 -m venv venv
+```
+
+Activate the virtual environment. (Command for MacOS) 
+```
+source venv/bin/activate
+```
+
+### Install all required packages
+
 Once created, you can sync up with the full development environment by running `python -m pip install -r requirements.txt` from within the virtual environment. This is the same `requirements.txt` that can found alongside `README.md` and `wsgi.py`.
 
 ## Running the site
