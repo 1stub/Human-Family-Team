@@ -8,6 +8,7 @@ package-lock.json
 package.json
 .prettierrc
 .gitignore
+.env
 
 # Mac
 .DS_Store
