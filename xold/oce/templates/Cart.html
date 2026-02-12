@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<script id="catalog-data" type="application/json">
+  {{ product_catalog | tojson }}
+</script>
+
+<script>
+  // Parse the JSON safely from the embedded script
+  const PRODUCT_CATALOG = JSON.parse(document.getElementById("catalog-data").textContent);
+  console.log("Loaded product catalog:", PRODUCT_CATALOG);
+</script>
+
+
+
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/Cart.css') }}"
+/>
+
+
+<!-- <button id="back-button" class="back-button">Go Back</button> -->
+
+<section class="cart-section">
+  <div class="cart-intro">
+    <h2 class="cart-title">Review Your Order</h2>
+    <p class="cart-description">
+      Below are the items in your cart. Fill out your details to send your request, and we’ll contact you shortly!
+    </p>
+  </div>
+
+  <!-- Cart Summary -->
+  <div class="cart-summary">
+    <div id="cart-items" class="cart-items">
+      <!-- JavaScript will populate items here -->
+    </div>
+    <div id="cart-total" class="cart-total">
+      <!-- JavaScript will populate total here -->
+    </div>
+  </div>
+
+    <div class="cart-actions">
+        <button id="clear-cart" class="clear-cart-button">Clear Cart</button>
+    </div>
+  <!-- Contact Form -->
+  <!--<form
+    class="cart-form"
+    action="https://api.web3forms.com/submit"
+    method="POST"
+  >
+    <input
+      type="hidden"
+      name="access_key"
+      value="518a5a9e-038b-4915-9a41-9cb2cf1067f3"
+    />
+    <input
+      type="hidden"
+      name="subject"
+      value="New Cart Submission from My Website"
+    />
+    <input
+      type="hidden"
+      name="from_name"
+      value="My Website"
+    />
+    -->
+    <!-- JavaScript will populate hidden inputs for cart items -->
+     <!--
+    <div id="hidden-cart-inputs"></div>
+
+    <div class="form-group">
+      <label for="name" class="form-label">Name</label>
+      <input
+        id="name"
+        name="name"
+        class="form-input"
+        placeholder="Your name"
+        type="text"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="email" class="form-label">Email</label>
+      <input
+        id="email"
+        name="email"
+        class="form-input"
+        placeholder="Your email"
+        type="email"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="phone" class="form-label">Phone</label>
+      <input
+        id="phone"
+        name="phone"
+        class="form-input"
+        placeholder="+1 (234) 56789"
+        type="text"
+      />
+    </div>
+    <div class="form-group">
+      <label for="message" class="form-label">Message</label>
+      <textarea
+        id="message"
+        name="message"
+        class="form-textarea"
+        placeholder="Additional details or questions"
+      ></textarea>
+    </div>
+
+    <button class="form-submit" type="submit">Send Request</button>
+  </form>
+-->
+      <form id="checkout-form" action="/create-checkout-session" method="POST">
+        <input type="hidden" name="cart" id="cart-data">
+        <button type="submit">Checkout</button>
+      </form>
+  <script src="{{ url_for('static', filename='js/Cart.js') }}"></script>
+</section>
+
+<script>
+  function loadCart() {
+    const cartItemsContainer = document.getElementById("cart-items");
+    const cartTotalContainer = document.getElementById("cart-total");
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    cartItemsContainer.innerHTML = "";
+    let total = 0;
+
+    cart.forEach((item, index) => {
+      const product = PRODUCT_CATALOG[item.id.toString()];
+      if (!product) return;
+
+      const itemPrice = product.price / 100;
+      const quantity = item.quantity || 1;
+      const itemTotal = itemPrice * quantity;
+
+      total += itemTotal;
+
+      const itemDiv = document.createElement("div");
+      itemDiv.classList.add("cart-item");
+      itemDiv.innerHTML = `
+        <span class="item-name">${product.name}</span>
+        <div class="quantity-controls">
+          <button class="decrease-qty" data-index="${index}">−</button>
+          <input type="number" class="item-quantity-input" data-index="${index}" value="${quantity}" min="0">
+          <button class="increase-qty" data-index="${index}">+</button>
+        </div>
+        <span class="item-price">$${itemTotal.toFixed(2)}</span>
+      `;
+
+      cartItemsContainer.appendChild(itemDiv);
+    });
+
+    cartTotalContainer.textContent = `Total: $${total.toFixed(2)}`;
+
+    // Event listeners for quantity buttons
+    document.querySelectorAll(".increase-qty").forEach(button => {
+      button.addEventListener("click", (e) => {
+        const index = e.target.dataset.index;
+        updateQuantity(index, 1);
+      });
+    });
+
+    document.querySelectorAll(".decrease-qty").forEach(button => {
+      button.addEventListener("click", (e) => {
+        const index = e.target.dataset.index;
+        updateQuantity(index, -1);
+      });
+    });
+
+    // Event listeners for quantity input fields
+    document.querySelectorAll(".item-quantity-input").forEach(input => {
+      input.addEventListener("change", (e) => {
+        const index = e.target.dataset.index;
+        const newQuantity = parseInt(e.target.value, 10) || 0;
+        setQuantity(index, newQuantity);
+      });
+    });
+
+    function updateQuantity(index, change) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const newQuantity = (cart[index].quantity || 1) + change;
+
+      if (newQuantity <= 0) {
+        cart.splice(index, 1);
+      } else {
+        cart[index].quantity = newQuantity;
+      }
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      loadCart();
+    }
+
+    function setQuantity(index, quantity) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      if (quantity <= 0) {
+        cart.splice(index, 1);
+      } else {
+        cart[index].quantity = quantity;
+      }
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      loadCart();
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", loadCart);
+</script>
+
+
+
+
+{% endblock %}

@@ -1,0 +1,97 @@
+Hex Values for Human Domino Effect Branding
+
+note: the more important values are the top and bottom gradients as they represent two of the game's major values - the middle is just the combination of the two
+
+an example of a "block" can be found in the site's static resources
+
+Block 1:
+--------------------------
+top gradient: #919191
+middle gradient: #AE8558
+bottom gradient: #B27A3F
+--------------------------
+
+Block 2:
+--------------------------
+top gradient: #878B7D
+middle gradient: #97A7CF
+bottom gradient: #97A8D0
+--------------------------
+
+Block 3:
+--------------------------
+top gradient: #D5D5D5
+middle gradient: #828282
+bottom gradient: #5E5E5E
+--------------------------
+
+Block 4:
+--------------------------
+top gradient: #D5D5D5
+middle gradient: #9A9A9A
+bottom gradient: #919191
+--------------------------
+
+Block 5:
+--------------------------
+top gradient: #878B7D
+middle gradient: #93A1BC
+bottom gradient: #97A8D0
+--------------------------
+
+Block 6:
+--------------------------
+top gradient: #D5D5D5
+middle gradient: #848484
+bottom gradient: #5E5E5E
+--------------------------
+
+Block 7:
+--------------------------
+top gradient: #A89670
+middle gradient: #999384
+bottom gradient: #929292
+--------------------------
+
+Block 8:
+--------------------------
+top gradient: #919191
+middle gradient: #A09291
+bottom gradient: #B69290
+--------------------------
+
+Block 9:
+--------------------------
+top gradient: #D5D5D5
+middle gradient: #E7D5A5
+bottom gradient: #EFD592
+--------------------------
+
+All Game Board Blocks:
+--------------------------
+Left Pillar - bottom to top:
+footer: #E7E596
+#967040
+#B7B7B8
+#B5AE91
+#E3BE71
+#FFFDA5
+#D6EF9C
+
+Middle Pillar - bottom to top:
+footer: #EC7B67
+#717171
+#8594B8
+#8C8887
+#9D4080
+#B6424D
+#CC826B
+
+Right Pillar - bottom to top:
+footer: #98A8E1
+#515151
+#8B8B8B
+#DBCFA4
+#74CAD7
+#6D98C6
+#8D69BF

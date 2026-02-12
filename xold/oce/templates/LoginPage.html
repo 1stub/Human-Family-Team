@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/LoginPage.css') }}" />
+
+<div class="container mt-5">
+
+    <div class="form-section">
+        <h2 class="mb-3">Welcome to Login Page!</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('content.login') }}" method="post" class="login-form">
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" class="form-control" 
+                       id="email" name="email" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" class="form-control" 
+                       id="password" name="password" required>
+            </div>
+
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="remember_me" name="remember_me">
+                <label class="form-check-label" for="remember_me">Remember me</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+
+        <p class="text-center mt-4 text-muted">
+            <small>Note: User authentication is not yet implemented.</small>
+        </p>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>Contact Page</title>
+    <link rel="stylesheet" href="static/css/ContactPage.css" type = "text/css"/>
+    <!-- Add Specific Font Later (CHECKED) -->
+    <link href="https://fonts.googleapis.com/css2?family=Varela&display=swap" rel="stylesheet">
+
+</head>
+<body>
+<div class="container">
+    <h1>Have questions? Connect with us!</h1>
+    <!-- <p>Test Test Test Test</p> -->
+    <div class="contact-box">
+        <div class="contact-left">
+            <h3>Send your request</h3>
+            <form>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail">Email</label>
+                        <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputName">Full Name</label>
+                        <input type="text" class="form-control" id="inputName" placeholder="Name">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label for="inputPhoneNumber">Phone Number</label>
+                    <input type="text" class="form-control" id="inputPhoneNumber" placeholder="123-456-7890">
+                </div>
+                <div class="form-row">
+                    <label for="inputSubject">Subject</label>
+                    <input type="text" class="form-control" id="inputSubject" placeholder=" Subject">
+                </div>
+
+                <!-- Input Message Box for brief message-->
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputMessage">Message</label>
+                        <textarea rows="5" placeholder="Message"></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="button" >Send</button>
+            
+            
+            </form>
+            <!-- Bootstrap Form-->
+        </div>
+        <div class="contact-right">
+            <h3>Reach us</h3>
+            <!-- Footer needed -->
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+{% endblock %}

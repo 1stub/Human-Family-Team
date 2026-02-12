@@ -1,0 +1,27 @@
+.love-color{
+	color: #BF713B ;
+	font-weight: bold;
+}
+
+.order-color{
+	color: #919191 ;
+	font-weight: bold;
+}
+
+.healthy-color{
+	color: #676051;
+	font-weight: bold;
+}
+
+.custom-img{
+	width: 500px;
+	height: 500px;
+	float: right;
+	margin-left 15px;
+}
+@media (max-width: 600px){
+    .main-container {
+        padding: 10px;
+    }
+}
+
