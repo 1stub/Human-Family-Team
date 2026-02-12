@@ -4,19 +4,6 @@
 
 A web application aimed towards teachers, students and their families that serves as a hub for discussions, resources and ecommerce.
 
-## Running the Project
-
-### Clone the Project
-
-```
-git clone https://github.com/paryal58/humanFamilyTeam.git humanFamilyTeam
-```
-
-### Open the Project Folder
-```
-cd humanFamilyTeam
-```
-
 ### Set up the Python Virtual Environment
 
 Create virtual environment.
