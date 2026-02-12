@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename= 'css/block1.css') }}"
+  />
+  <div class="container text-left">
+    <div class="row align-items-start">
+      <h1>
+        <span class="healthy-color">
+          Block #1 - A Healthy Place to Live and Learn
+        </span>
+      </h1>
+      <img
+        src="{{ url_for('static', filename='images/block1header.png') }}"
+        class="img-fluid"
+        alt="The Human Domino Effect board with the Bronze Learning Block"
+      />
+
+      <div class="col">
+        <img
+          src="{{ url_for('static', filename='images/block1people.png') }}"
+          class="custom-img"
+          alt="Adorchs and Nauotet ambassadors for copper love and tin order"
+        />
+
+        <p>
+          Together,
+          <span class="love-color"> Love </span> and
+          <span class="order-color"> Order </span>
+          make for an altogether different learning concept than they are
+          separately together they provide a way to build a
+          <span class="healthy-color"> Healthy Place to Live and Learn</span>.
+        </p>
+        <p>
+          Parents who manage a home environment and daily schedule that only
+          includes love without order may, for example,provide food that is not
+          healthy all in order to show their children they love them. This is a
+          perspective from only the child's young, less experienced view. Daily
+          schedules that don't include a bedtime that is early enough to provide
+          for enough sleep for learning at school is another example of how
+          parents might show love to their children to make them happy. Without
+          the order and guidance of providing enough sleep or healthy food each
+          meal, however, children do not get the rest or nutrition their bodies
+          need for growing and learning to reach their future potential. The
+          wellness elements of
+          <span class="love-color"> Love</span> and
+          <span class="order-color">Order </span> combine in a unique way that
+          becomes a foundational building block of wellness what is easy to
+          share and understand by both parents and children begins a common
+          language between educators and healthcare workers. create healthier
+          guidelines than when thought of separately. Parents who insist on
+          <span class="order-color"> Order </span> without the element of love
+          also miss the balance of providing the best for their children. Isn't
+          it interesting to reflect on parenting styles on the continuum created
+          by these two concepts and how one end or the other is not what is best
+          over all for children and teens.
+        </p>
+        <p>
+          Pointing out how the combination of these two elements can seem
+          obvious and unnecessary at first, however, when used as a guideline,
+          families have a foundation for building a personalized version for
+          making choices that help learn to them help themselves and make
+          choices that allow them to reach their own unique wellness goals.
+        </p>
+        <p>
+          Together
+          <span class="love-color"> Love </span> and
+          <span class="order-color"> Order </span>combine to make a
+          <span class="healthy-color"> Healthy Place </span> for learning and
+          living. Just like two specific metals smelt together to make stronger
+          and uniquely useful alloys, these elements of love and order combine
+          to create a way to remember and provide steps to guide individuals,
+          families, schools, work-groups, teams, and communities to create
+          blocks for building a more balanced, better-functioning home, school,
+          or community.
+        </p>
+        <p>
+          <span class="love-color"> Love </span> is to
+          <span class="order-color"> Order </span> like
+          <span class="love-color"> Copper </span> is to
+          <span class="order-color"> Tin, </span> for Copper and Tin smelt well
+          together...to make <span class="healthy-color">Bronze, </span> a
+          stronger alloy for surviving humanity's challenges and weather. Many
+          people make a good living using this alloy from our earth with
+          industries that buy, sell, make, and use, tools, weapons, jewelry, and
+          cooking utensils.
+        </p>
+        <p>
+          <span class="love-color"> Love </span> and
+          <span class="order-color"> Order </span> smelt well too to make a
+          <span class="healthy-color">
+            healthy home and school learning place
+          </span>
+          for me and you.
+        </p>
+      </div>
+      <img
+        src="{{ url_for('static', filename='images/block1Scale.png') }}"
+        class="img-fluid"
+        alt="A scale showing how love and order leads to a healthy place to live and learn"
+      />
+    </div>
+  </div>
+{% endblock %}

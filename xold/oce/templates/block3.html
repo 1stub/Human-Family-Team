@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/block2.css') }}"
+  />
+
+  <div class="container text-left">
+    <div class="row align-items-start">
+      <h1>
+        <span class="energy-color">Block #3: Energy for Learning</span>
+      </h1>
+      <img
+        src="{{ url_for('static', filename='images/block3header.png') }}"
+        class="img-fluid"
+        alt="The Human Domino Effect board with the Antimonial-Lead Energy Block"
+      />
+
+      <div class="col">
+        <img
+          src="{{ url_for('static', filename = 'images/block3people.png') }}"
+          class="custom-img"
+          alt="Antap and Kuyohlatac ambassadors for lead focus and antimonial joy"
+        />
+
+        <p>
+          Together they provide a way to build
+          <span class="energy-color">The Antimonial-Lead Kind of Energy</span>.
+        </p>
+        <p>
+          Children and teens often feel a lethargy or a kind of stress-fatigue
+          when faced with given tasks or assignments. We, as adults, understand
+          this feeling and recognize the self-control needed to just get past
+          the mental resistance to do the tasks needed to get to the more
+          enjoyable parts of our day or day-off. Building this kind of mental
+          building block can be achieved with less stress and resistance by
+          first utilizing activities that children and teens have a natural and
+          individualized interest in. This will develop a stronger ability to
+          focus for longer spans of time.
+        </p>
+        <p>
+          For example, if a child or teen has a hard time with concentration
+          with taking care of their laundry, instead of allowing the
+          circumstances to get heated, stressful, or draining, take time to
+          build momentum for focus through a favorite multi-step task. The
+          enthusiasm of the task, like asking the dog if s/he would like a walk,
+          getting the leash, coat, shoes, walking, putting all away, and then
+          trying to concentrate on the initial task will help break the tension
+          and decrease attention deficit. Toddlers who are given fun or
+          self-chosen multi-step tasks are better able to develop an intrinsic
+          motivation to focus for longer amounts of time when school age
+          assignments come in future years.
+        </p>
+        <p>
+          Moving the mental slider from joy to focus throughout the day should
+          be considerate to the needs of children/teens. This habit will help
+          them manage their own focus-joy mindset in adulthood, improving mental
+          well-being. It helps them know they have the ability to choose the
+          focus of their mind.
+        </p>
+        <p>
+          <span class="joy-color">Antimony</span> is to
+          <span class="focus-color">Lead</span> like
+          <span class="joy-color">Joy</span> is to
+          <span class="focus-color">Focus</span>.
+        </p>
+        <p>
+          <span class="joy-color">Antimony</span> and
+          <span class="focus-color">Lead</span> smelt well together to make an
+          alloy called <span class="energy-color">Antimonial Lead</span>. Many
+          people make a good living using this alloy made from metals from our
+          earth for industries that buy sell, make, and use car batteries,
+          casting materials, and soldering.
+        </p>
+        <p>
+          <span class="joy-color">Joy</span> and
+          <span class="focus-color">Focus</span> smelt together to make
+          <span class="energy-color">Happy Optimal or Antimonial Energy</span>
+          for learning and living together.
+        </p>
+      </div>
+      <img
+        src="{{ url_for('static', filename='images/block3scale.png') }}"
+        class="img-fluid"
+        alt="A scale showing how Antimonial-Lead Energy is a mix of Antimony Joy and Lead Focus"
+      />
+    </div>
+  </div>
+{% endblock %}

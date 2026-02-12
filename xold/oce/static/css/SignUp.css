@@ -1,0 +1,131 @@
+/* Page background */
+body {
+    background: #f4f6f9;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Wrapper to center the form */
+.signup-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Main container */
+.signup-container {
+    background: white;
+    padding: 40px 35px;
+    width: 100%;
+    max-width: 420px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* Header */
+.signup-header h1 {
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.signup-header p {
+    color: #666;
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+/* Form layout */
+.signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Form groups */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-label {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Inputs & Select */
+.form-input {
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #d6d6d6;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s ease-in-out;
+}
+
+.form-input:focus {
+    border-color: #2d7ff9;
+    box-shadow: 0 0 0 2px rgba(45,127,249,0.15);
+}
+
+/* Submit button */
+.btn-submit {
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background: #2d7ff9;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+
+.btn-submit:hover {
+    background: #1b5fc5;
+}
+
+/* Footer */
+.form-footer {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.form-footer a {
+    text-decoration: none;
+    color: #2d7ff9;
+    font-weight: bold;
+}
+
+.form-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Flash Messages (Bootstrap-like) */
+.alert {
+    padding: 10px 12px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.alert-success {
+    background: #e6f8ee;
+    color: #0f5132;
+    border: 1px solid #badbcc;
+}
+
+.alert-danger {
+    background: #fde8e8;
+    color: #842029;
+    border: 1px solid #f5c2c7;
+}
+
+.alert-warning {
+    background: #fff3cd;
+    color: #664d03;
+    border: 1px solid #ffecb5;
+}

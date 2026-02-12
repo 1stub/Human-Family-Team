@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+
+{% block sidebar %}
+<div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary" style="width: 100%;">
+  <a class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+    <button class="btn btn-primary has-icon btn-block" type="button" data-toggle="modal" data-target="#threadModal" onclick="showModal()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class="feather feather-plus mr-2">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+      NEW POST
+    </button>
+  </a>
+  <hr>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="col-md-12">
+
+  <h3 style="padding-top: 3pt;">{{ selected_group_name or "Concept Exchange Chat" }}</h3>
+
+  <!-- Chat log -->
+  <div id="chat-box" class="mb-3 border rounded p-3"
+       style="height: 400px; overflow-y: auto; display: flex; flex-direction: column;">
+    {% if posts %}
+      {% for post in posts|reverse %}
+      <div class="d-flex justify-content-between text-body-secondary pt-2" style="font-size: 1rem;">
+        <p class="pb-2 mb-0 small lh-sm border-bottom w-100">
+          <strong class="d-block text-gray-dark">{{ post.author_uuid }}</strong>
+          {{ post.text_content }}
+        </p>
+
+        {% if logged_in_user and logged_in_user.is_admin %}
+        <button class="btn btn-sm btn-danger ms-2 delete-post-btn"
+                data-post-id="{{ post.post_uuid }}"
+                title="Delete post">✖
+        </button>
+        {% endif %}
+      </div>
+      {% endfor %}
+    {% else %}
+      <p class="text-muted">No messages yet.</p>
+    {% endif %}
+  </div>
+
+  <!-- Message controls -->
+  <div id="message-controls" class="mt-3">
+    <div class="d-flex align-items-center gap-2">
+      {% if logged_in_user and logged_in_user.is_admin %}
+        <label for="roleSelect" class="mb-0">Role:</label>
+        <select id="roleSelect" class="form-select w-auto">
+          <option value="admin" selected>Admin</option>
+        </select>
+      {% elif logged_in_user %}
+        <select id="roleSelect" class="d-none">
+          <option value="user" selected>User</option>
+        </select>
+      {% else %}
+        <select id="roleSelect" class="d-none">
+          <option value="guest" selected>Guest</option>
+        </select>
+      {% endif %}
+    </div>
+
+    {% if active_group == "announcement" %}
+    <span class="badge bg-warning text-dark ms-2">Announcements are admin-only</span>
+    {% endif %}
+  </div>
+
+  <!-- Message input -->
+  <div id="message-input" class="input-group mt-2" style="display: none;">
+    <input type="text" id="message" class="form-control" placeholder="Type your message..." />
+    <button id="sendButton" class="btn btn-primary">Send</button>
+  </div>
+
+  <!-- Blocked message -->
+  <div id="no-posting-message" class="mt-2 text-muted" style="display: none;"></div>
+
+</div>
+
+<script>
+// ---------------------------------------------
+// SEND MESSAGE
+// ---------------------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+  const sendButton = document.getElementById('sendButton');
+  const messageInput = document.getElementById('message');
+  const chatBox = document.getElementById('chat-box');
+  const roleSelect = document.getElementById('roleSelect');
+
+  const isAdmin = {{ 'true' if logged_in_user and logged_in_user.is_admin else 'false' }};
+  const loggedInUser = {{ 'true' if logged_in_user else 'false' }};
+  const activeGroup = "{{ active_group }}";
+
+  const messageInputWrapper = document.getElementById('message-input');
+  const noPostingMessage = document.getElementById('no-posting-message');
+
+  function updateInputVisibility() {
+    if (!loggedInUser) {
+      messageInputWrapper.style.display = 'none';
+      noPostingMessage.style.display = 'block';
+      noPostingMessage.textContent = "You must be logged in to post.";
+      return;
+    }
+
+    if (activeGroup === "announcement" && !isAdmin) {
+      messageInputWrapper.style.display = 'none';
+      noPostingMessage.style.display = 'block';
+      noPostingMessage.textContent = "Only admins may post in Announcements.";
+      return;
+    }
+
+    messageInputWrapper.style.display = 'flex';
+    noPostingMessage.style.display = 'none';
+  }
+
+  updateInputVisibility();
+
+  if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+
+  async function sendMessage() {
+    const username = "{{ logged_in_user.username if logged_in_user else 'Anonymous' }}";
+    const content = messageInput.value.trim();
+    if (!content) {
+      alert('Please enter a message.');
+      return;
+    }
+
+    const isAnnouncement = (activeGroup === "announcement");
+
+    if (isAnnouncement && !isAdmin) {
+      alert('Only admins may post to Announcements.');
+      return;
+    }
+
+    try {
+      const response = await fetch('/create_post', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: username,
+          text_content: content,
+          is_announcement: isAnnouncement
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        messageInput.value = '';
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'd-flex justify-content-between text-body-secondary pt-2';
+        wrapper.style.fontSize = '1rem';
+
+        let deleteBtnHtml = "";
+        if (isAdmin) {
+            deleteBtnHtml = `
+                <button class="btn btn-sm btn-danger ms-2 delete-post-btn"
+                        data-post-id="${result.post_uuid}"
+                        title="Delete post">
+                    ✖
+                </button>`;
+        }
+
+        wrapper.innerHTML = `
+            <p class="pb-2 mb-0 small lh-sm border-bottom w-100">
+                <strong class="d-block text-gray-dark">${username}</strong>
+                ${escapeHtml(content)}
+            </p>
+            ${deleteBtnHtml}
+        `;
+
+        chatBox.appendChild(wrapper);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    } else {
+        alert('Failed to send message.');
+      }
+
+    } catch (err) {
+      alert('Error sending message.');
+    }
+  }
+
+  if (sendButton) {
+    sendButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      sendMessage();
+    });
+  }
+
+  if (messageInput) {
+    messageInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && e.ctrlKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>"'`=\/]/g, s => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;',
+      "'": '&#39;', '/': '&#x2F;', '`': '&#x60;', '=': '&#x3D;'
+    })[s]);
+  }
+});
+
+// ---------------------------------------------
+// DELETE POST (admin only)
+// ---------------------------------------------
+document.addEventListener("click", function(e) {
+  if (!e.target.classList.contains("delete-post-btn")) return;
+
+  const postId = e.target.getAttribute("data-post-id");
+  if (!confirm("Delete this post?")) return;
+
+  fetch(`/delete_post/${postId}`, { method: "POST" })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) location.reload();
+      else alert("Failed to delete post");
+    });
+});
+</script>
+
+{% endblock %}
