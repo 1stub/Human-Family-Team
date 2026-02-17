@@ -11,7 +11,7 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 print(f"DATABASE_URL: {DATABASE_URL[:50]}..." if DATABASE_URL else "DATABASE_URL not found!")
 
 if not DATABASE_URL:
-    print("❌ ERROR: DATABASE_URL not found in .env file!")
+    print("ERROR: DATABASE_URL not found in .env file!")
     print("Make sure your .env file contains:")
     print("DATABASE_URL=postgresql://signup_family_tree_user:...")
     exit(1)
@@ -36,7 +36,7 @@ try:
         is_admin INTEGER
     );
     ''')
-    print("✅ Users table created")
+    print("Users table created")
 
     # Create posts table
     cur.execute('''
@@ -54,7 +54,7 @@ try:
         image BYTEA
     );
     ''')
-    print("✅ Posts table created")
+    print("Posts table created")
 
     # Create comments table
     cur.execute('''
@@ -66,7 +66,7 @@ try:
         datetime TEXT NOT NULL
     );
     ''')
-    print("✅ Comments table created")
+    print("Comments table created")
 
     # Create indexes
     cur.execute('CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);')
@@ -74,24 +74,24 @@ try:
     cur.execute('CREATE INDEX IF NOT EXISTS idx_posts_author ON posts(author_uuid);')
     cur.execute('CREATE INDEX IF NOT EXISTS idx_comments_post ON comments(parent_post_uuid);')
     cur.execute('CREATE INDEX IF NOT EXISTS idx_comments_author ON comments(author_uuid);')
-    print("✅ Indexes created")
+    print("Indexes created")
 
     conn.commit()
     cur.close()
     conn.close()
 
-    print("\n🎉 PostgreSQL database setup completed successfully!")
+    print("\nPostgreSQL database setup completed successfully!")
     print("You can now run your Flask app with USE_POSTGRESQL=true")
 
 except psycopg2.OperationalError as e:
-    print(f"❌ Connection Error: {e}")
+    print(f"Connection Error: {e}")
     print("\nTroubleshooting:")
     print("1. Check that your DATABASE_URL is correct in .env")
     print("2. Verify the database is accessible from your network")
     print("3. Make sure the database exists on Render")
 
 except Exception as e:
-    print(f"❌ Error: {e}")
+    print(f"Error: {e}")
     if 'conn' in locals():
         conn.rollback()
         conn.close()
