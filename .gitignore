@@ -19,6 +19,7 @@ package.json
 # Distribution / packaging
 .Python
 build/
+flask_session/
 develop-eggs/
 dist/
 downloads/
