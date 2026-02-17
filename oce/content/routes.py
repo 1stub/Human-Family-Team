@@ -230,19 +230,6 @@ def concept_exchange(group_id=None):
         selected_group_name=selected_group_name,
     )
 
-
-
-# def concept_exchange():
-#     posts = db_interface.get_posts_for_class()
-#     return render_template(
-#         'mainForum.html',
-#         posts=posts,
-#         show_sidebar=True,
-#         active_group='concept_exchange',
-#         is_announcement_page=False
-#     )
-
-
 @content.route('/announcements')
 def announcements():
     posts = db_interface.get_announcements()
@@ -301,14 +288,6 @@ def resources(selected_age=None):
         session['selected_age'] = selected_age
     return render_template('resources.html', selected_age=selected_age)
 
-
-# @content.route('/content/resources/<int:selected_age>')
-# @content.route('/resources/<int:selected_age>')
-# def resources(selected_age):
-#     session['selected_age'] = selected_age
-#     return render_template('resources.html', selected_age=selected_age)
-
-
 @content.route('/content/Login/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -345,6 +324,7 @@ def calendar():
 def contact():
   return render_template('ContactPage.html')
 
+# TODO: Update shope page to instead redirect to shopify content!
 @content.route('/content/Shop/')
 def shop():
   if 'user_uuid' not in session:
@@ -407,24 +387,6 @@ def create_post_route():
         print(f"[ERROR] Failed to create post: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
 
-#@content.route('/create_post', methods=['POST'])
-#def create_post_route():
-#    data = request.get_json()  # Get JSON data from the request
-#    text_content = data.get('text_content')  # Extract the post content
-#    username = data.get('username')
-#
-#    if not text_content:
-#        return jsonify({'success': False, 'error': 'Text content is required.'}), 400
-#
-#    try:
-#        # create_post(author=User(user_uuid="example", username="name", email="example@email.com", password="password", profile_pic=b"", about_me=''), text_content=text_content, tag1='', tag2='', tag3='', tag4='', tag5='', datetime='', location='', image=None)
-#        create_post(author=username, text_content=text_content)  # this should be updated when the user login feature is added to look more like the one above this line
-#        return jsonify({'success': True})
-#    except Exception as e:
-#        print(f"Error: {e}")
-#        return jsonify({'success': False, 'error': str(e)}), 500
-
-
 @content.route('/delete_post/<post_uuid>', methods=['POST'])
 def delete_post_route(post_uuid):
 
@@ -445,302 +407,11 @@ def delete_post_route(post_uuid):
 
     return {"success": True}
 
-# @content.route('/delete_post/<post_uuid>', methods=['POST'])
-# def delete_post_route(post_uuid):
-#     from oce.utils.db_interface import get_post_by_uuid, delete_post
-#     from flask import session
-
-#     print("ADMINS LIST:", ADMINS)
-#     print("CURRENT USER:", session.get("user"))
-
-    
-#     # Check logged in
-#     current_user = session.get("user")
-#     if not current_user:
-#         return {"success": False, "error": "Not logged in"}, 403
-
-#     # Check admin
-#     if current_user not in ADMINS:
-#         return {"success": False, "error": "Not authorized"}, 403
-
-#     # Fetch post
-#     post = get_post_by_uuid(post_uuid)
-#     if not post:
-#         return {"success": False, "error": "Post not found"}, 404
-
-#     # Delete post
-#     delete_post(post)
-#     return {"success": True}
-
-
-
-  # Stripe webhook secret
-
-
-# ----------------------------
-# CREATE CHECKOUT SESSION
-# ----------------------------
-@content.route('/create-checkout-session', methods=['POST'])
-def create_checkout_session():
-    cart_json = request.form.get('cart')
-    cart = json.loads(cart_json or "[]")
-
-    customer_email = request.form.get('email')  # From your checkout form
-
-    line_items = []
-    for item in cart:
-        product = PRODUCT_CATALOG.get(item['id'])
-        if product:
-            line_items.append({
-                'price_data': {
-                    'currency': 'usd',
-                    'product_data': {'name': product['name']},
-                    'unit_amount': product['price'],  # in cents
-                },
-                'quantity': item['quantity'],
-            })
-
-    if not line_items:
-        return "Invalid cart", 400
-
-    # ----------------------------
-    # 💌 TEST EMAIL (before Stripe)
-    # ----------------------------
-    try:
-        msg = Message(
-            subject="Checkout Session Started",
-            recipients=["catronater@outlook.com"],  # send to yourself
-            body=f"Customer email: {customer_email}\n\nCart: {cart}"
-        )
-        mail.send(msg)
-        print("✅ Test email sent successfully before Stripe redirect!")
-    except Exception as e:
-        print(f"❌ Mail send failed (before Stripe): {e}")
-
-    # ----------------------------
-    # STRIPE CHECKOUT SESSION
-    # ----------------------------
-
-    session = stripe.checkout.Session.create(
-        payment_method_types=['card'],
-        line_items=line_items,
-        mode='payment',
-        customer_email=customer_email,  # Stripe sends receipt
-        success_url=url_for('content.success', _external=True) + '?session_id={CHECKOUT_SESSION_ID}',
-        cancel_url=url_for('content.index', _external=True),
-        shipping_address_collection={'allowed_countries': ['US', 'CA']},  # optional
-    )
-    print("Checkout Made...")
-    return redirect(session.url, code=303)
-
-
-# ----------------------------
-# STRIPE WEBHOOK
-# ----------------------------
-
-@content.route("/webhook", methods=["POST"])
-def stripe_webhook():
-    payload = request.data
-    sig_header = request.headers.get("Stripe-Signature")
-
-    try:
-        event = stripe.Webhook.construct_event(
-            payload, sig_header, endpoint_secret
-        )
-    except ValueError:
-        return "Invalid payload", 400
-    except stripe.error.SignatureVerificationError:
-        return "Invalid signature", 400
-
-    if event["type"] == "checkout.session.completed":
-        session_id = event["data"]["object"]["id"]
-
-        # Retrieve full session info, expanding customer and line_items
-        session = stripe.checkout.Session.retrieve(
-            session_id,
-            expand=["customer", "line_items"]
-        )
-
-        # ----------------------------
-        # Customer info
-        # ----------------------------
-        customer_details = session.get("customer_details", {})
-        customer_email = session.get("customer_email") or customer_details.get("email", "Unknown")
-        customer_name = customer_details.get("name", "Customer")
-
-        # ----------------------------
-        # Shipping info
-        # ----------------------------
-        shipping_info = "No shipping info provided."
-        shipping = customer_details.get("address")
-        if shipping:
-            lines = [
-                customer_name,
-                f"{shipping.get('line1', '')} {shipping.get('line2', '')}".strip(),
-                f"{shipping.get('city', '')}, {shipping.get('state', '')} {shipping.get('postal_code', '')}".strip(),
-                shipping.get("country", "")
-            ]
-            # Remove empty lines and join with newline
-            shipping_info = "\n".join(filter(None, lines))
-
-        # ----------------------------
-        # Order items
-        # ----------------------------
-        items_text = ""
-        line_items = session.get("line_items", {}).get("data", [])
-        for item in line_items:
-            items_text += f"{item.quantity} x {item.description} - ${item.amount_total / 100:.2f}\n"
-
-        # ----------------------------
-        # Send email
-        # ----------------------------
-        site_owner_email = 'catronater@outlook.com'
-        try:
-            msg_to_owner = Message(
-                subject="New Order Received",
-                recipients=[site_owner_email],
-                body=f"""
-New order received from {customer_name} ({customer_email}):
-
-Shipping Address:
-{shipping_info}
-
-Order Summary:
-{items_text}
-
-Please forward this to maggie@southlandprint.com
-"""
-            )
-            print("📨 Attempting to send email...")
-            with current_app.app_context():
-                mail.send(msg_to_owner)
-            print("✅ Email sent successfully!")
-        except Exception as e:
-            print(f"❌ Mail send failed: {e}")
-
-        return jsonify({"status": "success"})
-
-    return jsonify({"status": "ignored"})
-
-
-# @content.route('/github_login')
-# def github_login():
-#     if not github.authorized:
-#         print("Client ID:", os.getenv('GITHUB_OAUTH_CLIENT_ID'))
-#         print("Client Secret:", os.getenv('GITHUB_OAUTH_CLIENT_SECRET'))
-#         auth_url, _ = github.authorization_url("https://github.com/login/oauth/authorize")
-#         print("Redirecting to GitHub:",auth_url)
-#         return redirect(auth_url)
-#     #content.github_login
-#     else:
-#        account_info = github.get('/user')
-#        if account_info.ok:
-#           account_info_json = account_info.json()
-#           return f'<h1>Your GitHub name is {account_info_json["login"]}</h1>'
-#     return'<h1>Request failed!<h1>'
-
-# @content.route("/github_login")
-# def login_github():
-#     if not github.authorized:
-#         return redirect(url_for("github.login"))  # this triggers OAuth flow
-
-#     resp = github.get("/user")
-#     if not resp.ok:
-#         flash("Failed to fetch user info.", "error")
-#         return redirect(url_for("content.login"))
-
-#     username = resp.json()["login"]
-#     session["user"] = username
-#     flash(f"Logged in as {username}", "success")
-
-#     if username in ADMINS:
-#         return redirect(url_for("content.admin_dashboard"))
-
-#     return redirect(url_for("content.index"))
-
-# @content.route("/github_test")
-# def github_test():
-#     print("Authorized:", github.authorized)
-#     print("Token:", github.token)
-#     return "Check terminal"
-
-# @content.route('/github_callback')
-# def github_callback():
-    # print("🔄 OAuth callback triggered!")
-    # print("📂 Request Args:", request.args)
-
-    # if 'code' not in request.args:
-    #     print("❌ No 'code' in request.")
-    #     flash("Authorization failed. No code received.", "error")
-    #     return redirect(url_for('content.login'))
-
-    # auth_code = request.args['code']
-
-    # try:
-    #     print("🔄 Exchanging code for token...")
-
-    #     # Manually exchange the code for a token
-    #     url = "https://github.com/login/oauth/access_token"
-    #     data = {
-    #         "client_id": os.getenv("GITHUB_CLIENT_ID"),
-    #         "client_secret": os.getenv("GITHUB_CLIENT_SECRET"),
-    #         "code": auth_code,
-    #         "redirect_uri": "http://127.0.0.1:5000/github_callback",
-    #     }
-    #     headers = {"Accept": "application/json"}
-
-    #     response = requests.post(url, json=data, headers=headers)
-    #     print("🔄 GitHub Token Exchange Response:", response.text)  # Debug
-
-    #     token_data = response.json()
-
-    #     if "access_token" not in token_data:
-    #         print("❌ No access_token in response:", token_data)
-    #         flash("Authorization failed. No token received.", "error")
-    #         return redirect(url_for('content.login'))
-
-    #     session['github_token'] = token_data["access_token"]
-    #     print("🟢 Session updated with token:", session['github_token'])
-
-    # except Exception as e:
-    #     print("❌ Error during token exchange:", e)
-    #     flash("Authorization failed. Token exchange error.", "error")
-    #     return redirect(url_for('content.login'))
-
-    # return redirect(url_for('content.index'))
-    # print("Callback triggered!")  # Debug print
-    # print("Session Data:", session)
-
-
-    # print("GitHub Token:", session.get("github_oauth_token"))
-    # print(github.authorized)
-    # if not github.authorized:
-    #    print("Failed")
-    #    flash("Authorizatiion failed.", "error")
-    #    return redirect(url_for('content.login'))
-
-    # account_info = github.get('/user')
-    # if account_info.ok:
-    #    account_info_json = account_info.json()
-    #    username = account_info_json['login']
-    #    print(f"Logged in as {username}")
-
-    #    session['user'] = username
-    #    flash(f"Logged in as {username}" , "success")
-
-    #    if username in ADMINS:
-    #       return redirect(url_for('content.admin_dashboard'))
-
-    #    return redirect(url_for('content.index'))
-    # flash("Failed to fetch user info.", "error")
-    # return redirect(url_for('content.index'))
-
 @content.route('/admin')
 def admin_dashboard():
     if 'user' not in session or session['user'] not in ADMINS:
        return "Unauthorized", 403
     return render_template('admin_dashboard.html')
-
 
 from oce.utils.db_interface import (
     get_user_by_uuid,
