@@ -6,13 +6,12 @@ A web application aimed towards teachers, students and their families that serve
 
 ### Set up the Python Virtual Environment
 
-Create virtual environment.
-⚠️ **Warning:** Python 3.11 is the recommended to ensure everything is running properly.
+Create virtual environment. Python 3.12 is recommended to ensure everything is running properly.
 ```
-python3.11 -m venv venv
+python3 -m venv venv
 ```
 
-Activate the virtual environment. (Command for MacOS) 
+Activate the virtual environment (Command for Linux/macOS) 
 ```
 source venv/bin/activate
 ```
@@ -24,10 +23,5 @@ Once created, you can sync up with the full development environment by running `
 ## Running the site
 
 During development, the site can be run using `flask run` from the terminal. You can also run the command as `flask run --debug` to enable hot reloading and the in-browser debugger.
-<<<<<<< HEAD
-This command must be run from the toplevel directory of the code structure (the same folder as `wsgi.py`). The site will be launched on your computer's [localhost](http://localhost:5000/) on port 5000. Use `Ctrl+C` to stop the server.
 
-##Public Site Link
-=======
 This command must be run from the toplevel directory of the code structure (the same folder as `wsgi.py`). The site will be launched on your computer's [localhost](http://localhost:5000/) on port 5000. Use `Ctrl+C` to stop the server.
->>>>>>> 8a773014a02f5b2e7c2930862f254873308bdfd0
