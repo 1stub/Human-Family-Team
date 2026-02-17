@@ -17,75 +17,6 @@ from .. import mail #mail from _init_.py
 from oce.utils import db_interface
 from datetime import datetime
 
-stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
-endpoint_secret = os.getenv("STRIPE_WEBHOOK_SECRET")
-
-
-
-#THIS INSURES NO TAMPERING OF PRICES
-#SINCE THIS IS IN THE BACKEND IT SHOULD BE SAFE
-PRODUCT_CATALOG = {
-    1: {'name': 'Bully Booster 1', 'price': 500},
-    2: {'name': 'Bully Booster 2', 'price': 500},
-    3: {'name': 'Bully Booster 3', 'price': 500},
-    4: {'name': 'Bully Booster 4', 'price': 500},
-    5: {'name': 'Bully Booster 5', 'price': 500},
-    6: {'name': 'Bully Booster 6', 'price': 500},
-    7: {'name': 'Bully Booster 7', 'price': 500},
-    8: {'name': 'Bully Booster 8', 'price': 500},
-    9: {'name': 'Bully Booster 9', 'price': 500},
-    10: {'name': 'Action Cards Bundle 1', 'price': 500},
-    11: {'name': 'Action Cards Bundle 2', 'price': 500},
-    12: {'name': 'Action Cards Bundle 3', 'price': 500},
-    13: {'name': 'Action Cards Bundle 4', 'price': 500},
-    14: {'name': 'Action Cards Bundle 5', 'price': 500},
-    15: {'name': 'Action Cards Bundle 6', 'price': 500},
-    16: {'name': 'Learning Environment Card', 'price': 500},
-    17: {'name': 'Stability Card', 'price': 500},
-    18: {'name': 'Learning Energy Card', 'price': 500},
-    19: {'name': 'Perception Card', 'price': 500},
-    20: {'name': 'Responsibility Card', 'price': 500},
-    21: {'name': 'Ability Card', 'price': 500},
-    22: {'name': 'Discernment Card', 'price': 500},
-    23: {'name': 'Friendships Card', 'price': 500},
-    24: {'name': 'Resilience Card', 'price': 500},
-    25: {'name': 'Arts Face Card', 'price': 500},
-    26: {'name': 'Humanities Face Card', 'price': 500},
-    27: {'name': 'Sciences Face Card', 'price': 500},
-    28: {'name': 'Learning Environment Card', 'price': 500},
-    29: {'name': 'Stability Card', 'price': 500},
-    30: {'name': 'Learning Energy Card', 'price': 500},
-    31: {'name': 'Perception Card', 'price': 500},
-    32: {'name': 'Responsibility Card', 'price': 500},
-    33: {'name': 'Ability Card', 'price': 500},
-    34: {'name': 'Discernment Card', 'price': 500},
-    35: {'name': 'Friendships Card', 'price': 500},
-    36: {'name': 'Resilience Card', 'price': 500},
-    37: {'name': 'Distinguished Citizen', 'price': 500},
-    38: {'name': 'Zipper Pouch', 'price': 500},
-    39: {'name': 'Calendar', 'price': 500},
-    40: {'name': 'Character Equation Poster', 'price': 500},
-    41: {'name': 'Venn Diagram Poster', 'price': 500},
-    42: {'name': 'Scope & Sequence Poster', 'price': 500},
-    43: {'name': 'Problem Solvers Poster', 'price': 500},
-    44: {'name': 'Building Blocks Poster', 'price': 500},
-    45: {'name': 'Micro-credential Badges', 'price': 500},
-    46: {'name': 'Learning Environment Badge', 'price': 500},
-    47: {'name': 'Stability Badge', 'price': 500},
-    48: {'name': 'Learning Energy Badge', 'price': 500},
-    49: {'name': 'Perception Badge', 'price': 500},
-    50: {'name': 'Responsibility Badge', 'price': 500},
-    51: {'name': 'Ability Badge', 'price': 500},
-    52: {'name': 'Discernment Badge', 'price': 500},
-    53: {'name': 'Friendship Badge', 'price': 500},
-    54: {'name': 'Resilience Badge', 'price': 500},
-    55: {'name': 'Venn Diagram with Symbols', 'price': 500},
-    56: {'name': 'Scope & Sequence Customizable', 'price': 500},
-    57: {'name': 'Town Hall Lessons', 'price': 500},
-    58: {'name': 'Venn Diagram Wall Cling', 'price': 500},
-}
-
-
 class SessionStorage(BaseStorage):
     def __init__(self, session_key="flask_dance_token"):
         super().__init__()
@@ -119,11 +50,6 @@ github_blueprint = make_github_blueprint(
     storage=SessionStorage()
 )
 content.register_blueprint(github_blueprint, url_prefix='/github_login')
-
-#@content.route('/content/SignupPage')
-#def signup2():
-#  return render_template('SignupPage.html')
-
 
 @content.route('/content/SignupPage', methods=['GET', 'POST'])
 def signup():  # ← Function name MUST be 'signup' to match url_for('content.signup')
