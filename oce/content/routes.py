@@ -327,17 +327,10 @@ def contact():
 # TODO: Update shope page to instead redirect to shopify content!
 @content.route('/content/Shop/')
 def shop():
-  if 'user_uuid' not in session:
-        flash("Please log in to access the shop.", "warning")
-        return redirect(url_for('content.login'))
+#   if 'user_uuid' not in session:
+#         flash("Please log in to access the shop.", "warning")
+#         return redirect(url_for('content.login'))
   return render_template('Shop.html')
-
-@content.route('/content/Cart/')
-def cart():
-  if 'user_uuid' not in session:
-        flash("Please log in to access the cart.", "warning")
-        return redirect(url_for('content.login'))
-  return render_template('Cart.html', product_catalog=PRODUCT_CATALOG)
 
 @content.route('/create_post', methods=['POST'])
 def create_post_route():

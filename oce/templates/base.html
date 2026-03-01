@@ -9,7 +9,6 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Londrina+Solid:wght@100;300;400;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/ShopImage.css') }}">
 
   <style>
     body { padding-top: 100px; }
@@ -35,18 +34,6 @@
       padding: 1rem;
     }
     #sidebar .nav-link:hover { background-color: #e9ecef; }
-
-    .cart-badge {
-      position: absolute;
-      top: 0;
-      right: 0;
-      background: red;
-      color: white;
-      border-radius: 50%;
-      padding: 2px 6px;
-      font-size: 0.8rem;
-      display: none;
-    }
   </style>
 </head>
 
@@ -126,15 +113,6 @@
           <li class="nav-item"><h5><a href="{{ url_for('content.calendar') }}" class="nav-link">Calendar</a></h5></li>
           <li class="nav-item"><h5><a href="{{ url_for('content.contact') }}" class="nav-link">Contact</a></h5></li>
           <li class="nav-item"><h5><a href="{{ url_for('content.shop') }}" class="nav-link">Shop</a></h5></li>
-
-          <!-- SHOPPING CART -->
-          <li class="nav-item" style="margin-left:auto; position:relative;">
-            <a href="{{ url_for('content.cart') }}" class="nav-link">
-              <img src="{{ url_for('static', filename='images/ShoppingCart.png') }}" class="shopping-cart">
-              <span id="cart_count" class="cart-badge">0</span>
-            </a>
-          </li>
-
         </ul>
       </div>
     </div>
@@ -175,20 +153,5 @@
 
     </div>
   </div>
-
-  <!-- CART JS -->
-  <script>
-    function updateCartCount() {
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
-      const count = cart.length;
-      const badge = document.getElementById("cart_count");
-      if (badge) {
-        badge.textContent = count;
-        badge.style.display = count > 0 ? "inline-block" : "none";
-      }
-    }
-    document.addEventListener("DOMContentLoaded", updateCartCount);
-  </script>
-
 </body>
 </html>
