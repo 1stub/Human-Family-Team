@@ -320,8 +320,21 @@ def login():
 def calendar():
   return render_template('calendar.html')
 
-@content.route('/content/Contact/')
+@content.route('/content/Contact/', methods=['GET', 'POST'])
 def contact():
+  if request.method == 'POST':
+    subject = request.form.get('inputSubject')
+    name = request.form.get('inputName')
+    email = request.form.get('inputEmail')
+    phone = request.form.get('inputPhoneNumber')
+    message = request.form.get('inputMessage')
+    msg1 = Message(f"The Human Domino Effect Contact Page: {subject}", recipients=["stephaniefairchildfister@gmail.com"])
+    msg1.body = f"Name: {name}\nEmail: {email}\nPhone Number: {phone}\n\nMessage: {message}"
+    msg2 = Message(f"The Human Domino Effect Contact Page: {subject}", recipients=[email])
+    msg2.body = f"We have recieved your message. Please do not reply to this email. Keep an eye out for a response from Stephanie at stephaniefairchildfister@gmail.com\n\n"\
+    + f"Name: {name}\nEmail: {email}\nPhone Number: {phone}\n\nMessage: {message}"
+    mail.send(msg1)
+    mail.send(msg2)
   return render_template('ContactPage.html')
 
 # TODO: Update shope page to instead redirect to shopify content!
