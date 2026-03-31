@@ -47,6 +47,93 @@
   border: 4px solid black;
 }
 
+/* Box - Handling Hover Functionality in Character Equation Section */
+.hover-box1 
+{
+    padding: 20px;
+    position: relative;
+}
+
+.hover-box2 
+{
+    padding: 20px;
+    position: relative;
+}
+
+.hover-box3 
+{
+    padding: 20px;
+    position: relative;
+}
+
+.row 
+{
+  position: relative;
+}
+
+.equation-row 
+{
+  display: flex;            
+  align-items: center;       
+  justify-content: center;  
+  gap: 20px;                 
+}
+
+.equationBoxesHealth 
+{
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 75vw;
+  opacity: 0;
+  visibility: hidden;
+  border: 10px solid #ffc107;
+}
+
+.equationBoxesLiberty 
+{
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 75vw;
+  opacity: 0;
+  visibility: hidden;
+  border: 10px solid #0d6efd;
+}
+
+.equationBoxesHappiness 
+{
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 75vw;
+  opacity: 0;
+  visibility: hidden;
+  border: 10px solid #dc3545;
+}
+
+
+.hover-box1:hover ~ .equationBoxesHealth 
+{
+  opacity: 1;
+  visibility: visible;
+}
+
+.hover-box2:hover ~ .equationBoxesLiberty
+{
+  opacity: 1;
+  visibility: visible;
+}
+
+.hover-box3:hover ~ .equationBoxesHappiness 
+{
+  opacity: 1;
+  visibility: visible;
+}
+
 #tiles-link {
   cursor: pointer;
 }
