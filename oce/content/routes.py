@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, send_file, request, jsonify, redirect, url_for, flash, session, current_app
+from flask_dance.contrib.google import make_google_blueprint, google
+from flask_dance.contrib.azure import make_azure_blueprint, azure
+from flask_dance.contrib.github import make_github_blueprint, github
 from oce.utils.db_interface import create_post, get_post_by_uuid, create_user, get_user_by_email
 import base64
 from oce.utils.db_interface import get_user_by_uuid, delete_post
 from oce.utils.models import User
-from flask_dance.contrib.github import github, make_github_blueprint
 from flask_dance.consumer.storage.session import BaseStorage
 from dotenv import load_dotenv
 load_dotenv()
@@ -50,6 +52,26 @@ github_blueprint = make_github_blueprint(
     storage=SessionStorage()
 )
 content.register_blueprint(github_blueprint, url_prefix='/github_login')
+
+google_blueprint = make_google_blueprint(
+    client_id=os.getenv('GOOGLE_OAUTH_CLIENT_ID'),
+    client_secret=os.getenv('GOOGLE_OAUTH_CLIENT_SECRET'),
+    scope=["profile", "email"],
+    redirect_url="/google_callback",
+    storage=SessionStorage()
+)
+content.register_blueprint(google_blueprint, url_prefix='/google_login')
+
+"""
+azure_blueprint = make_azure_blueprint(
+    client_id=os.getenv('MICROSOFT_OAUTH_CLIENT_ID'),
+    client_secret=os.getenv('MICROSOFT_OAUTH_CLIENT_SECRET'),
+    scope="User.Read",
+    redirect_url="/microsoft_callback",
+    storage=SessionStorage()
+)
+content.register_blueprint(azure_blueprint, url_prefix='/microsoft_login') 
+"""
 
 @content.route('/content/SignupPage', methods=['GET', 'POST'])
 def signup():  # ← Function name MUST be 'signup' to match url_for('content.signup')
@@ -100,6 +122,66 @@ def signup():  # ← Function name MUST be 'signup' to match url_for('content.si
 
     # GET request - render the signup page
     return render_template('SignupPage.html')
+
+@content.route("/google_callback")
+def google_callback():
+    if not google.authorized:
+        return redirect(url_for("content.google.login"))
+
+    resp = google.get("/oauth2/v2/userinfo")
+    info = resp.json()
+
+    email = info["email"]
+    username = info.get("name", email.split("@")[0])
+
+    user = get_user_by_email(email)
+
+    if not user:
+        create_user(
+            username=username,
+            email=email,
+            password="oauth_google",
+            about_me="Role: oauth"
+        )
+
+    user = get_user_by_email(email)
+
+    session['user'] = user['username']
+    session['user_uuid'] = user['user_uuid']
+
+    flash("Logged in with Google!", "success")
+    return redirect(url_for('content.index'))
+
+"""
+@content.route("/microsoft_callback")
+def microsoft_callback():
+    if not azure.authorized:
+        return redirect(url_for("azure.login"))
+
+    resp = azure.get("/v1.0/me")
+    info = resp.json()
+
+    email = info.get("mail") or info.get("userPrincipalName")
+    username = info.get("displayName", email.split("@")[0])
+
+    user = get_user_by_email(email)
+
+    if not user:
+        create_user(
+            username=username,
+            email=email,
+            password="oauth_microsoft",
+            about_me="Role: oauth"
+        )
+
+    user = get_user_by_email(email)
+
+    session['user'] = user['username']
+    session['user_uuid'] = user['user_uuid']
+
+    flash("Logged in with Microsoft!", "success")
+    return redirect(url_for('content.index'))
+"""
 
 @content.route('/content/success')
 def success():
@@ -184,7 +266,6 @@ def keystoneblock():
 @content.route('/content/tiles/')
 def tiles():
     return send_file('static/docs/Human-Domino-Effect-Footprint-Tiles.pdf', download_name='Human-Domino-Effect-Footprint-Tiles.pdf')
-
 
 @content.route('/content/ConceptExchange/')
 @content.route('/content/ConceptExchange/<group_id>')

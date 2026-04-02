@@ -48,6 +48,16 @@
 
             <button type="submit" class="btn-submit">Create Account</button>
 
+            <div class="oauth-section">
+                <p style="text-align:center; margin-top:15px;">Or sign up with:</p>
+
+                <div style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
+                    <a href="{{ url_for('content.google.login') }}" class="btn-submit" style="background:#db4437;">
+                        Continue with Google
+                    </a>
+                </div>
+            </div>
+
             <div class="form-footer">
                 <p>Already have an account? <a href="{{ url_for('content.login') }}">Sign in</a></p>
             </div>
