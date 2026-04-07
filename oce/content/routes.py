@@ -53,11 +53,20 @@ github_blueprint = make_github_blueprint(
 )
 content.register_blueprint(github_blueprint, url_prefix='/github_login')
 
+"""
 google_blueprint = make_google_blueprint(
     client_id=os.getenv('GOOGLE_OAUTH_CLIENT_ID'),
     client_secret=os.getenv('GOOGLE_OAUTH_CLIENT_SECRET'),
     scope=["profile", "email"],
     redirect_url="/google_callback",
+    storage=SessionStorage()
+)
+"""
+google_blueprint = make_google_blueprint(
+    client_id=os.getenv('GOOGLE_OAUTH_CLIENT_ID'),
+    client_secret=os.getenv('GOOGLE_OAUTH_CLIENT_SECRET'),
+    scope=["profile", "email"],
+    redirect_to="content.google_callback",  # endpoint name, safer than redirect_url
     storage=SessionStorage()
 )
 content.register_blueprint(google_blueprint, url_prefix='/google_login')
