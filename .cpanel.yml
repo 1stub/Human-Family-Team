@@ -1,8 +1,8 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/gsbq8115mkly/repositories/Human-Family-Team
-    - source /home/gsbq8115mkly/virtualenv/repositories/Human-Family-Team/3.11/bin/activate
+    - export DEPLOYPATH=/home/gsbq8115mkly/repositories/Human-Family-Team-2
+    - source /home/gsbq8115mkly/virtualenv/repositories/Human-Family-Team-2/3.11/bin/activate
     - pip install --upgrade pip
     - pip install -r $DEPLOYPATH/requirements.txt
     - touch $DEPLOYPATH/tmp/restart.txt
