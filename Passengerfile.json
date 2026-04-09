@@ -1,0 +1,6 @@
+{
+    "app_type": "python",
+    "startup_file": "passenger_wsgi.py",
+    "environment": "production",
+    "python": "/home/gsbq8115mkly/Human-Family-Team/venv/bin/python3"
+}
