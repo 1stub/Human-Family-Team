@@ -1,7 +1,7 @@
 argon2-cffi==25.1.0
 argon2-cffi-bindings>=21.2.0
 blinker>=1.7.0
-cffi==1.16.2
+cffi>=1.15.1
 click==8.1.7
 Flask==3.0.2
 Flask-Login==0.6.3
