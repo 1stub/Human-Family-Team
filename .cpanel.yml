@@ -5,4 +5,5 @@ deployment:
     - source /home/gsbq8115mkly/virtualenv/repositories/Human-Family-Team/3.11/bin/activate
     - pip install --upgrade pip
     - pip install -r $DEPLOYPATH/requirements.txt
+    - mkdir -p $DEPLOYPATH/tmp
     - touch $DEPLOYPATH/tmp/restart.txt
