@@ -1,0 +1,11 @@
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/$USER/repositories/Human-Family-Team
+
+    # Activate virtualenv and install dependencies
+    - source $DEPLOYPATH/venv/bin/activate
+    - pip install --upgrade pip
+    - pip install -r $DEPLOYPATH/requirements.txt
+
+    # Restart the app (Passenger restart trigger)
+    - touch $DEPLOYPATH/tmp/restart.txt
