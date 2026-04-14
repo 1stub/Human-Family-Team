@@ -2,7 +2,7 @@
   WARNING: Formatters like Prettier that don't support Flask/Jinja
   may break the indenting in this file!
 -->
-
+ 
 <!-- include the navbar and footer -->
 {% extends 'base.html' %}
 <!-- this is the content block that corresponds to base.html -->
@@ -14,12 +14,12 @@
 <!--
   The home page is defined as a Bootstrap grid
   (https://getbootstrap.com/docs/5.3/layout/grid/)
-
+ 
   This link can explain many of the Bootstrap CSS
   classes on each element, such as row and col-*
 -->
-
-
+ 
+ 
 <div class="container-fluid">
   <div class="row align-items-center my-10 py-2-5">
     <!--
@@ -73,7 +73,7 @@
       </div>
     </div>
   </div>
-
+ 
   <div
     class="row align-items-center text-center bg-primary text-white mb-5 my-0"
   >
@@ -81,7 +81,7 @@
       <h2>Our Story</h2>
     </div>
   </div>
-
+ 
   <div class="row align-items-start mb-5 py-10">
     <div class="col-12 col-md-4 mb-4">
       <div class="card">
@@ -98,14 +98,14 @@
               friends and neighbors working together to make our communities a
               better place for everyone to live.
             </p>
-
+ 
             <p>
               While it is true that there were the barriers of prejudice,
               oppression, and inequality in our collective history, there were
               also more chances than today for children to see people working
               together in their village.
             </p>
-
+ 
             <p>
               Children could see people building houses with each other, growing
               and harvesting food with one other, and chipping in to help when
@@ -115,7 +115,7 @@
         </div>
       </div>
     </div>
-
+ 
     <div class="col-12 col-md-4 mb-4">
       <div class="card">
         <img
@@ -147,7 +147,7 @@
         </div>
       </div>
     </div>
-
+ 
     <div class="col-12 col-md-4 mb-4">
       <div class="card">
         <img
@@ -180,20 +180,20 @@
       </div>
     </div>
   </div>
-
+ 
   <div class="row align-items-center text-center bg-info text-white mb-5 my-0">
     <div class="col py-3">
       <h2>The Game</h2>
     </div>
   </div>
-
+ 
   <div class="row justify-content-center text-start mb-5 py-10">
     <div class="col-12 col-lg-4 mb-4">
       <!--
         A nested grid is used so the two cards on the left and right
         can stack even in full width. There is a "row" within the col-4
         where each card takes up the full width, making them stack
-
+ 
         The middle image could be restyled to provide better
         responsiveness as the screen gets smaller (it tends to
         squish before it hits the breakpoint and stacks)
@@ -211,7 +211,7 @@
             </div>
           </div>
         </div>
-
+ 
         <div class="col-12">
           <div class="card m-2">
             <div class="card-body">
@@ -229,7 +229,7 @@
         </div>
       </div>
     </div>
-
+ 
     <div class="col-12 col-lg-4 mb-4">
       <img
         src="{{ url_for('static', filename='images/gameplay.png') }}"
@@ -237,7 +237,7 @@
         alt="The Human Domino Effect game board in play with dominos"
       />
     </div>
-
+ 
     <div class="col-12 col-lg-4 mb-4">
       <div class="row">
         <div class="col-12">
@@ -254,7 +254,7 @@
               </p>
             </div>
           </div>
-
+ 
           <div class="col-12 order-4">
             <div class="card m-2">
               <div class="card-body">
@@ -275,7 +275,7 @@
       </div>
     </div>
   </div>
-
+ 
   <div
     class="row align-items-center text-center bg-warning text-white mb-5 my-0"
   >
@@ -283,11 +283,11 @@
       <h2>Human Footprint Tiles</h2>
     </div>
   </div>
-
+ 
   <!--
   Accordians in Bootstrap require dense HTML and CSS for each
   element, so a for-loop is used here to loop over each round
-
+ 
   Note: the class names and ID's are sensitive, if changed
   they should all be changed to be uniform
 -->
@@ -308,7 +308,7 @@
           ('Some of us Sapiens walk north out of Africa and we make our first beads', '74,000 ya'),
           ('Sapiens who went North meet up with Neanderthals and Denisovians', '50,000 ya')
           ]),
-
+ 
           ('One', 'Seeds, Pets, Music, and Fishing', [
           ('First sewing needles and we make dogs our pets!', '35,000 ya'),
           ('Neanderthals and Denisovians become extinct', '26,000 ya'),
@@ -321,7 +321,7 @@
           ('Agriculture began in Africa and Southwest Asia, and dominos are invented!', '10,000 ya'),
           ('Sapiens built a town called Catalhoük in East Asia and made clay pots', '9,000 ya')
           ]),
-
+ 
           ('Two', 'Horses, Trade, Towns, and Writing', [
           ('Copper smelting started in Southwest Asia', '8,500 ya'),
           ('Our skin color genes began to change and us Sapiens began to be different beautiful colors', '8,000 ya'),
@@ -334,7 +334,7 @@
           ('Horses were domesticated and the Yamnaya mixed with the Cordedware people', '5,500 ya'),
           ('Writing letters to make words began in Sumer and Egypt', '5,400 ya')
           ]),
-
+ 
           ('Three', 'Bronze, Laws, Sailboats, and Leaders', [
           ('First known leader ruled in Northeast Africa, known as the Scorpion King', '5,150 ya'),
           ('First chart of the stars was made in Northeast Asia and the first boats sailed on the Nile River', '5,000 ya'),
@@ -347,7 +347,7 @@
           ('Abraham is born, and 4 billion people from three religions today include him in their faith', '2000 BC'),
           ('Hinduism, a faith in South Asia, begins while iron is discovered in West Africa and Southwest Asia', '1500 BC')
           ]),
-
+ 
           ('Four', 'Coins, Books, and Bridges', [
           ('Iron smelting began in Southeast Asia, and the first lighthouse was built in North Africa', '1300 BC'),
           ('First Olympics took place in Greece, and in 700 BC the first trackway was built for hauling goods', '776 BC'),
@@ -360,7 +360,7 @@
           ('The Roman Empire ends, and in 589 AD toilet paper is invented in China', '476 AD'),
           ('Islam begins, and the T\'ang Dynasty begins in Southeast Asia', '600 AD')
           ]),
-
+ 
           ('Five', 'Telescopes, Microscopes, Lightbulbs, Cars, Planes, and Phones', [
           ('Lions became extinct in Europe', '1000 AD'),
           ('Magnetic compass was invented in Southeast Asia', '1119 AD'),
@@ -373,10 +373,10 @@
           ('Today, we have come so far as one human family. WE need you to keep improving life on our Earth!', 'Today'),
           ('From the game: Congrats! You got the last double nine! Collect 3 Gúdì and give one to each player too!', 'Today')
           ])
-
+ 
           ]
           %}
-
+ 
           <!-- to access the outer loop index in the inner loop, we need to rename it-->
           {% set outerloop = loop %}
           <div class="accordion-item">
@@ -413,10 +413,10 @@
                       1. the (inner) loop index, which increments with each stone (loop indexes start at 1, not 0!)
                       2. the (outer) loop index, which maintains the count when the round increments (10 stones in each round)
                       3. the number of colors available (6 colors that loop, see index.css)
-
+ 
                       Example: the 3rd stone in Round 2 is (3 - 1) + (2 * 10)) % 6 = 22 % 6 = stone-4
                                                 move index to 0 ^
-
+ 
                       (in the game, the first round is Round 0, not Round 1)
                       -->
                       <span
@@ -433,7 +433,7 @@
         {% endfor %}
       </div>
     </div>
-
+ 
     <!-- Make the tile board image appear before the accordian at smaller screen sizes -->
     <div class="col-12 col-lg-6 mb-4 order-0 order-lg-1 d-flex flex-column align-items-center">
       <img
@@ -443,10 +443,10 @@
       />
       <h5 id="tiles-link"><a href="{{ url_for('content.tiles') }}" target="_blank">Click to see the full diagram with video links!</a></h5>
     </div>
-
+ 
   </div>
 </div>
-
+ 
 <div
     class="row align-items-center text-center bg-success text-white mb-5 my-0"
   >
@@ -454,7 +454,7 @@
       <h2>Character Equation Cards</h2>
     </div>
   </div>
-
+ 
   <div class="row align-items-start mb-5 py-10">
     <div class="col-12 col-md-4 mb-4">
       <div class="card">
@@ -467,17 +467,17 @@
               as essential to living our best lives,
               both in personal growth and in our relationships.
             </p>
-
+ 
             <p>
               These traits are grounded in thoughtful activities 
               that show how character traits build upon one another, 
               creating a kind of 
-              “character arithmetic”
+              "character arithmetic"
               that inspires growth and connection!
             </p>
-
+ 
             <p>
-              Character Equations introduce students to nine unique “equations,” each
+              Character Equations introduce students to nine unique "equations," each
               blending three character traits that foster personal
               growth, healthy relationships, and a well-rounded
               approach to both academic and home life. It begins
@@ -486,7 +486,7 @@
               being intersect, setting the stage for understanding the
               big picture of how these character traits fit together.
             </p>
-
+ 
             <p>
               The Character Equations are divided into 
               <strong>Health (The Sciences)</strong>, <strong>Liberty (The Humanities)</strong>, 
@@ -500,7 +500,7 @@
         </div>
       </div>
     </div>
-
+ 
     <div class="col-12 col-md-4 mb-4">
       <div class="card">
         <div class="card-body">
@@ -517,12 +517,12 @@
               families, neighborhoods, and school communities, fostering
               a more inclusive, respectful, and growth-oriented atmosphere.
             </p>
-
+ 
             <p>
               Teachers and parents play a crucial role in reinforcing
               these lessons. By encouraging conversations at home,
               celebrating progress, and modeling these character traits,
-              adults help students integrate what they’ve learned into
+              adults help students integrate what they've learned into
               their daily lives. Together, we create an environment where
               students can thrive academically, socially, and
               emotionally.
@@ -531,7 +531,7 @@
         </div>
       </div>
     </div>
-
+ 
     <div class="col-12 col-md-4 mb-4">
       <div class="card">
         <div class="card-body">
@@ -554,12 +554,12 @@
               As students master each equation, they receive a character card, which they can store in a pouch on
               their lanyard. They also earn a microcredential badge, proudly displayed on a communal bulletin 
               board—encouraging a sense of progress and collective achievement. This dual system 
-              (cards on lanyards, badges on display) reinforces students’ sense of ownership and shared success.
+              (cards on lanyards, badges on display) reinforces students' sense of ownership and shared success.
             </p>
             <p>
               <strong>Building Momentum:</strong>
-              Month by month, the Venn diagram becomes populated with the “building blocks” of each 
-              character equation, showing how students’ choices and behaviors contribute to overall 
+              Month by month, the Venn diagram becomes populated with the "building blocks" of each 
+              character equation, showing how students' choices and behaviors contribute to overall 
               well-being. By the end of the program, students gain a clear, visual reminder of how their 
               newly acquired traits interconnect and support them in school, at home, and in the community.
             </p>
@@ -567,19 +567,19 @@
         </div>
       </div>
     </div>
-
+ 
     <h2 style="text-align: center;">Hover over each of the categories to learn more!</h1>
-
+ 
   <div class="container text-center">
     <div class="row">
-
+ 
       <div class="hover-box1 col-md-4">
         <h1 class="text-warning">Health</h1>
         <h2>(The Sciences)</h2>
       </div>
-
+ 
       <div class="equationBoxesHealth">
-
+ 
         <div class="row">
           <div class="col-md-6">
             <p style="font-size: 1.3rem;">
@@ -589,48 +589,48 @@
               through observation, experiments, and testing ideas. Remember, choices that harm our health or block our ability to
               gain knowledge keep us from reaching our full potential in this area of health.
             </p>
-            <img src="{{ url_for('static', filename='images/Health Character Equation Card - Formal & Physical Sciences.png') }}" class="img-fluid" width="30%" />
-            <img src="{{ url_for('static', filename='images/Health Character Equation Card - Life Sciences.png') }}" class="img-fluid" width="30%"/>
-            <img src="{{ url_for('static', filename='images/Health Character Equation Card - Earth & Environmental Sciences.png') }}" class="img-fluid" width="30%" />
+            <img src="{{ url_for('static', filename='images/Health_Character_Equation_Card_-_Formal_&_Physical_Sciences.png') }}" class="img-fluid" width="30%" />
+            <img src="{{ url_for('static', filename='images/Health_Character_Equation_Card_-_Life_Sciences.png') }}" class="img-fluid" width="30%"/>
+            <img src="{{ url_for('static', filename='images/Health_Character_Equation_Card_-_Earth_&_Environmental_Sciences.png') }}" class="img-fluid" width="30%" />
           </div>
-
+ 
           <div class="col-md-6">
             <div class="equation-row">
-            <img src="{{ url_for('static', filename='images/Health Character Equation Card - Hope.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Health_Character_Equation_Card_-_Hope.png') }}" class="img-fluid" width="150" />
             <h1>+</h1>
-            <img src="{{ url_for('static', filename='images/Health Character Equation Card - Knowledge.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Health_Character_Equation_Card_-_Knowledge.png') }}" class="img-fluid" width="150" />
             <h1>=</h1>
-            <img src="{{ url_for('static', filename='images/Health Character Equation Card - Discernment.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Health_Character_Equation_Card_-_Discernment.png') }}" class="img-fluid" width="150" />
             </div>
-
+ 
             <div class="equation-row">
-            <img src="{{ url_for('static', filename='images/Health Character Equation Card - Patience.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Health_Character_Equation_Card_-_Patience.png') }}" class="img-fluid" width="150" />
             <h1>+</h1>
-            <img src="{{ url_for('static', filename='images/Health Character Equation Card - Senses.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Health_Character_Equation_Card_-_Senses.png') }}" class="img-fluid" width="150" />
             <h1>=</h1>
-            <img src="{{ url_for('static', filename='images/Health Character Equation Card - Perception.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Health_Character_Equation_Card_-_Perception.png') }}" class="img-fluid" width="150" />
             </div>
-
+ 
             <div class="equation-row">
-            <img src="{{ url_for('static', filename='images/Health Character Equation Card - Helpfulness.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Health_Character_Equation_Card_-_Helpfulness.png') }}" class="img-fluid" width="150" />
             <h1>+</h1>
-            <img src="{{ url_for('static', filename='images/Health Character Equation Card - Organization.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Health_Character_Equation_Card_-_Organization.png') }}" class="img-fluid" width="150" />
             <h1>=</h1>
-            <img src="{{ url_for('static', filename='images/Health Character Equation Card - Learning Environment.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Health_Character_Equation_Card_-_Learning_Environment.png') }}" class="img-fluid" width="150" />
             </div>
           </div>
         </div>
         
-
+ 
       </div>
-
+ 
       <div class="hover-box2 col-md-4">
         <h1 class="text-primary">Liberty</h1>
         <h2>(The Humanities)</h2>
       </div>
-
+ 
       <div class="equationBoxesLiberty">
-
+ 
         <div class="row">
           <div class="col-md-6">
             <p style="font-size: 1.3rem;">
@@ -640,46 +640,46 @@
               that focuses on human culture and how people interact and cooperate. It explores our history, religions, philosophies, and languages,
               and examines how they influence personal liberty. To honor liberty, we can show kindness and respect everyone's freedom to be themselves.
             </p>
-            <img src="{{ url_for('static', filename='images/Liberty Character Equation Card - Law & Government.png') }}" class="img-fluid" width="30%" />
-            <img src="{{ url_for('static', filename='images/Liberty Character Equation Card - History Anthropology & Archaeology.png') }}" class="img-fluid" width="30%"/>
-            <img src="{{ url_for('static', filename='images/Liberty Character Equation Card - Ethics Belief & Philosophy.png') }}" class="img-fluid" width="30%" />
+            <img src="{{ url_for('static', filename='images/Liberty_Character_Equation_Card_-_Law_&_Government.png') }}" class="img-fluid" width="30%" />
+            <img src="{{ url_for('static', filename='images/Liberty_Character_Equation_Card_-_History_Anthropology_&_Archaeology.png') }}" class="img-fluid" width="30%"/>
+            <img src="{{ url_for('static', filename='images/Liberty_Character_Equation_Card_-_Ethics_Belief_&_Philosophy.png') }}" class="img-fluid" width="30%" />
           </div>
       <div class="col-md-6">
             <div class="equation-row">
-            <img src="{{ url_for('static', filename='images/Liberty Character Equation Card - Respect.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Liberty_Character_Equation_Card_-_Respect.png') }}" class="img-fluid" width="150" />
             <h1>+</h1>
-            <img src="{{ url_for('static', filename='images/Liberty Character Equation Card - Gentleness.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Liberty_Character_Equation_Card_-_Gentleness.png') }}" class="img-fluid" width="150" />
             <h1>=</h1>
-            <img src="{{ url_for('static', filename='images/Liberty Character Equation Card - Friendship.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Liberty_Character_Equation_Card_-_Friendship.png') }}" class="img-fluid" width="150" />
             </div>
-
+ 
             <div class="equation-row">
-            <img src="{{ url_for('static', filename='images/Liberty Character Equation Card - Kindness.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Liberty_Character_Equation_Card_-_Kindness.png') }}" class="img-fluid" width="150" />
             <h1>+</h1>
-            <img src="{{ url_for('static', filename='images/Liberty Character Equation Card - Understanding.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Liberty_Character_Equation_Card_-_Understanding.png') }}" class="img-fluid" width="150" />
             <h1>=</h1>
-            <img src="{{ url_for('static', filename='images/Liberty Character Equation Card - Responsibility.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Liberty_Character_Equation_Card_-_Responsibility.png') }}" class="img-fluid" width="150" />
             </div>
-
+ 
             <div class="equation-row">
-            <img src="{{ url_for('static', filename='images/Liberty Character Equation Card - Care.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Liberty_Character_Equation_Card_-_Care.png') }}" class="img-fluid" width="150" />
             <h1>+</h1>
-            <img src="{{ url_for('static', filename='images/Liberty Character Equation Card - Safety.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Liberty_Character_Equation_Card_-_Safety.png') }}" class="img-fluid" width="150" />
             <h1>=</h1>
-            <img src="{{ url_for('static', filename='images/Liberty Character Equation Card - Stability.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Liberty_Character_Equation_Card_-_Stability.png') }}" class="img-fluid" width="150" />
             </div>
           </div>
         </div>
-
+ 
         </div>
-
+ 
       <div class="hover-box3 col-md-4">
         <h1 class="text-danger">Happiness</h1>
         <h2>(The Arts)</h2>
       </div>
-
+ 
       <div class="equationBoxesHappiness">
-
+ 
         <div class="row">
           <div class="col-md-6">
             <p style="font-size: 1.3rem;">
@@ -689,42 +689,43 @@
               playing music, acting, writing, or designing, the arts let you express yourself and spark joy. To build happiness for yourself and others, try
               all kinds of hobbies and learn skills to see what resonates and sparks joy in your heart and mind.
             </p>
-            <img src="{{ url_for('static', filename='images/Happiness Character Equation Card - The Visual Musical & Performing Arts.png') }}" class="img-fluid" width="30%" />
-        <img src="{{ url_for('static', filename='images/Happiness Character Equation Card - The Literary & Culinary Arts.png') }}" class="img-fluid" width="30%"/>
-        <img src="{{ url_for('static', filename='images/Happiness Character Equation Card - Design Media Architecture.png') }}" class="img-fluid" width="30%" />
+            <img src="{{ url_for('static', filename='images/Happiness_Character_Equation_Card_-_The_Visual_Musical_&_Performing_Arts.png') }}" class="img-fluid" width="30%" />
+            <img src="{{ url_for('static', filename='images/Happiness_Character_Equation_Card_-_The_Literary_&_Culinary_Arts.png') }}" class="img-fluid" width="30%"/>
+            <img src="{{ url_for('static', filename='images/Happines_Character_Equation_Card_-_Design_Media_Architecture.png') }}" class="img-fluid" width="30%" />
           </div>
       <div class="col-md-6">
             <div class="equation-row">
-            <img src="{{ url_for('static', filename='images/Happiness Character Equation Card - Self Control.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Happiness_Character_Equation_Card_-_Self_Control.png') }}" class="img-fluid" width="150" />
             <h1>+</h1>
-            <img src="{{ url_for('static', filename='images/Happiness Character Equation Card - Purpose.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Happiness_Character_Equation_Card_-_Purpose.png') }}" class="img-fluid" width="150" />
             <h1>=</h1>
-            <img src="{{ url_for('static', filename='images/Happiness Character Equation Card - Resilience.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Happiness_Character_Equation_Card_-_Resilience.png') }}" class="img-fluid" width="150" />
             </div>
-
+ 
             <div class="equation-row">
-            <img src="{{ url_for('static', filename='images/Happiness Character Equation Card - Goodness.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Happiness_Character_Equation_Card_-_Goodness.png') }}" class="img-fluid" width="150" />
             <h1>+</h1>
-            <img src="{{ url_for('static', filename='images/Happiness Character Equation Card - Skills.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Happiness_Character_Equation_Card_-_Skills.png') }}" class="img-fluid" width="150" />
             <h1>=</h1>
-            <img src="{{ url_for('static', filename='images/Happiness Character Equation Card - Ability.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Happiness_Character_Equation_Card_-_Ability.png') }}" class="img-fluid" width="150" />
             </div>
-
+ 
             <div class="equation-row">
-            <img src="{{ url_for('static', filename='images/Happiness Character Equation Card - Joy.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Happiness_Character_Equation_Card_-_Joy.png') }}" class="img-fluid" width="150" />
             <h1>+</h1>
-            <img src="{{ url_for('static', filename='images/Happiness Character Equation Card - Focus.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Happiness_Character_Equation_Card_-_Focus.png') }}" class="img-fluid" width="150" />
             <h1>=</h1>
-            <img src="{{ url_for('static', filename='images/Happiness Character Equation Card - Learning Energy.png') }}" class="img-fluid" width="150" />
+            <img src="{{ url_for('static', filename='images/Happiness_Character_Equation_Card_-_Learning_Energy.png') }}" class="img-fluid" width="150" />
             </div>
           </div>
         </div>
-
+ 
         </div>
       </div>
-
+ 
     </div>
-
+ 
 </div>
-
+ 
 {% endblock %}
+ 
