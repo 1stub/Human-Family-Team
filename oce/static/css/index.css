@@ -76,62 +76,152 @@
   display: flex;            
   align-items: center;       
   justify-content: center;  
-  gap: 20px;                 
+  gap: 20px;     
+  flex-wrap: wrap;    
+  width: 100%;       
 }
 
 .equationBoxesHealth 
 {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
   width: 75vw;
+  margin: 20px auto; 
+  max-width: 1900px;
   opacity: 0;
   visibility: hidden;
   border: 10px solid #ffc107;
+  display: none;
 }
 
 .equationBoxesLiberty 
 {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
   width: 75vw;
+  margin: 20px auto; 
+  max-width: 1900px;
   opacity: 0;
   visibility: hidden;
   border: 10px solid #0d6efd;
+  display: none;
 }
 
 .equationBoxesHappiness 
 {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
   width: 75vw;
+  margin: 20px auto; 
+  max-width: 1900px;
   opacity: 0;
   visibility: hidden;
   border: 10px solid #dc3545;
+  display: none;
+}
+
+.eq-img 
+{
+  max-width: 150px;
+  width: 100%;
+  height: auto;
+  flex: 1 1 110px;
+}
+
+.equation-display-area > div 
+{
+  
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  visibility: hidden;
 }
 
 
-.hover-box1:hover ~ .equationBoxesHealth 
+.hover-box1:hover ~ .equation-display-area .equationBoxesHealth
 {
   opacity: 1;
   visibility: visible;
+  display: block;
 }
 
-.hover-box2:hover ~ .equationBoxesLiberty
+.hover-box2:hover ~ .equation-display-area .equationBoxesLiberty
 {
   opacity: 1;
   visibility: visible;
+  display: block;
 }
 
-.hover-box3:hover ~ .equationBoxesHappiness 
+.hover-box3:hover ~ .equation-display-area .equationBoxesHappiness 
 {
   opacity: 1;
   visibility: visible;
+  display: block;
+}
+
+.button1 
+{
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 22px;
+  font-family: "Londrina Solid";
+  width: 300px;
+  margin: 4px;
+}
+
+.button2 
+{
+  background-color: #198754;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 22px;
+  font-family: "Londrina Solid";
+  width: 300px;
+  margin: 4px;
+}
+
+.button3 
+{
+  background-color: #0dcaf0;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 22px;
+  font-family: "Londrina Solid";
+  width: 300px;
+  margin: 4px;
+}
+
+.button4 
+{
+  background-color: #ffc107;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 22px;
+  font-family: "Londrina Solid";
+  width: 300px;
+  margin: 4px;
+}
+
+.button5 
+{
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 22px;
+  font-family: "Londrina Solid";
+  width: 300px;
+  margin: 4px;
 }
 
 #tiles-link {
@@ -140,6 +230,7 @@
 
 h1,
 h2,
+h3,
 #character-name,
 #block-name,
 #block-number,
