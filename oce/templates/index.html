@@ -294,29 +294,29 @@
       </div>
     </div>
 
-    <h2 style="text-align: center;">Hover over each of the categories to learn more!</h1>
+    <h2 style="text-align: center;">Click each of the categories to learn more!</h2>
 
   <div class="container text-center">
     <div class="row">
 
-      <div class="hover-box1 col-md-4">
+      <button class="btn btn-light col-md-4" data-bs-toggle="collapse" data-bs-target="#healthBox">
         <h1 class="text-warning">Health</h1>
         <h2>(The Sciences)</h2>
-      </div>
+      </button>
 
-      <div class="hover-box2 col-md-4">
+      <button class="btn btn-light col-md-4" data-bs-toggle="collapse" data-bs-target="#libertyBox">
         <h1 class="text-primary">Liberty</h1>
         <h2>(The Humanities)</h2>
-      </div>
+      </button>
 
-        <div class="hover-box3 col-md-4">
+        <button class="btn btn-light col-md-4" data-bs-toggle="collapse" data-bs-target="#happinessBox">
         <h1 class="text-danger">Happiness</h1>
         <h2>(The Arts)</h2>
       </div>
 
-      <div class="equation-display-area">
+      <div class="equation-display-area" id="equationAccordion">
 
-      <div class="equationBoxesHealth">
+      <div id="healthBox" class="collapse equationBoxesHealth" data-bs-parent="#equationAccordion">
 
         <div class="row">
           <div class="col-md-6">
@@ -362,7 +362,7 @@
 
       </div>
 
-      <div class="equationBoxesLiberty">
+      <div id="libertyBox" class="collapse equationBoxesLiberty" data-bs-parent="#equationAccordion">
 
         <div class="row">
           <div class="col-md-6">
@@ -406,7 +406,7 @@
 
         </div>
 
-      <div class="equationBoxesHappiness">
+      <div id="happinessBox" class="collapse equationBoxesHappiness" data-bs-parent="#equationAccordion">
 
         <div class="row">
           <div class="col-md-6">
@@ -802,3 +802,4 @@
 
 
 {% endblock %}
+
