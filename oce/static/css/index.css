@@ -86,10 +86,7 @@
   width: 75vw;
   margin: 20px auto; 
   max-width: 1900px;
-  opacity: 0;
-  visibility: hidden;
   border: 10px solid #ffc107;
-  display: none;
 }
 
 .equationBoxesLiberty 
@@ -97,10 +94,7 @@
   width: 75vw;
   margin: 20px auto; 
   max-width: 1900px;
-  opacity: 0;
-  visibility: hidden;
   border: 10px solid #0d6efd;
-  display: none;
 }
 
 .equationBoxesHappiness 
@@ -108,10 +102,7 @@
   width: 75vw;
   margin: 20px auto; 
   max-width: 1900px;
-  opacity: 0;
-  visibility: hidden;
   border: 10px solid #dc3545;
-  display: none;
 }
 
 .eq-img 
@@ -128,26 +119,24 @@
   top: 0;
   left: 0;
   width: 100%;
-  opacity: 0;
-  visibility: hidden;
 }
 
 
-.hover-box1:hover ~ .equation-display-area .equationBoxesHealth
+.equationBoxesHealth.active
 {
   opacity: 1;
   visibility: visible;
   display: block;
 }
 
-.hover-box2:hover ~ .equation-display-area .equationBoxesLiberty
+.equationBoxesLiberty.active
 {
   opacity: 1;
   visibility: visible;
   display: block;
 }
 
-.hover-box3:hover ~ .equation-display-area .equationBoxesHappiness 
+.equationBoxesHappiness.active
 {
   opacity: 1;
   visibility: visible;
