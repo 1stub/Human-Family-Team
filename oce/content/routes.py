@@ -4,7 +4,9 @@ import base64
 from oce.utils.db_interface import get_user_by_uuid, delete_post
 from oce.utils.models import User
 from flask_dance.contrib.github import github, make_github_blueprint
+from flask_dance.consumer import oauth_authorized
 from flask_dance.consumer.storage.session import BaseStorage
+from flask_dance.contrib.google import google as google_oauth, make_google_blueprint
 from dotenv import load_dotenv
 load_dotenv()
 import os
@@ -50,6 +52,68 @@ github_blueprint = make_github_blueprint(
     storage=SessionStorage()
 )
 content.register_blueprint(github_blueprint, url_prefix='/github_login')
+
+@content.route('/debug_oauth')
+def debug_oauth():
+    from flask import request
+    return f"Base URL: {request.base_url}<br>Host URL: {request.host_url}"
+
+google_blueprint = make_google_blueprint(
+    client_id=os.getenv('GOOGLE_OAUTH_CLIENT_ID'),
+    client_secret=os.getenv('GOOGLE_OAUTH_CLIENT_SECRET'),
+    scope=[
+        "openid",
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile",
+    ],
+    storage=SessionStorage()
+)
+content.register_blueprint(google_blueprint, url_prefix='/google_login')
+
+@oauth_authorized.connect_via(google_blueprint)
+def google_logged_in(blueprint, token):
+    if not token:
+        flash("Google authentication failed.", "danger")
+        return False
+
+    try:
+        resp = google_oauth.get("/oauth2/v2/userinfo")
+        if not resp.ok:
+            flash("Could not fetch Google account info.", "danger")
+            return False
+
+        info = resp.json()
+        google_id = info["id"]
+        email     = info.get("email", "")
+        name      = info.get("name", email.split("@")[0])
+
+        user = db_interface.get_user_by_google_id(google_id)
+        if not user:
+            user = get_user_by_email(email)
+
+        if user:
+            if not user.get("google_id"):
+                db_interface.update_user_google_id(user["user_uuid"], google_id)
+        else:
+            db_interface.create_user(
+                username=name,
+                email=email,
+                password="",
+                about_me="Role: student",
+                google_id=google_id
+            )
+            user = get_user_by_email(email)
+
+        session['user']      = user['username']
+        session['user_uuid'] = user['user_uuid']
+        flash(f"Welcome, {user['username']}!", "success")
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        flash(f"Google login error: {e}", "danger")
+
+    return False 
 
 @content.route('/content/SignupPage', methods=['GET', 'POST'])
 def signup():  # ← Function name MUST be 'signup' to match url_for('content.signup')

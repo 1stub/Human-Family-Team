@@ -25,46 +25,46 @@ try:
 
     # Create users table
     cur.execute('''
-    CREATE TABLE IF NOT EXISTS users (
-        user_uuid TEXT PRIMARY KEY,
-        username TEXT UNIQUE NOT NULL,
-        email TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
-        profile_pic BYTEA,
-        about_me TEXT,
-        datetime_created TIMESTAMP NOT NULL DEFAULT NOW()
-        is_admin INTEGER
-    );
+        CREATE TABLE IF NOT EXISTS users (
+            user_uuid TEXT PRIMARY KEY,
+            username TEXT UNIQUE NOT NULL,
+            email TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            profile_pic BYTEA,
+            about_me TEXT,
+            datetime_created TIMESTAMP NOT NULL DEFAULT NOW(),
+            is_admin INTEGER DEFAULT 0,
+            google_id TEXT UNIQUE
+        );
     ''')
     print("Users table created")
 
     # Create posts table
     cur.execute('''
-    CREATE TABLE IF NOT EXISTS posts (
-        post_uuid TEXT PRIMARY KEY,
-        author_uuid TEXT NOT NULL,
-        text_content TEXT NOT NULL,
-        tag1 TEXT,
-        tag2 TEXT,
-        tag3 TEXT,
-        tag4 TEXT,
-        tag5 TEXT,
-        location TEXT,
-        datetime TEXT,
-        image BYTEA
-    );
+        CREATE TABLE IF NOT EXISTS posts (
+            post_uuid TEXT PRIMARY KEY,
+            author_uuid TEXT NOT NULL,
+            author_username TEXT,
+            text_content TEXT NOT NULL,
+            is_announcement INTEGER DEFAULT 0,
+            class_year INTEGER,
+            tag1 TEXT, tag2 TEXT, tag3 TEXT, tag4 TEXT, tag5 TEXT,
+            location TEXT,
+            datetime TEXT,
+            image BYTEA
+        );
     ''')
     print("Posts table created")
 
     # Create comments table
     cur.execute('''
-    CREATE TABLE IF NOT EXISTS comments (
-        comment_uuid TEXT PRIMARY KEY,
-        parent_post_uuid TEXT NOT NULL,
-        author_uuid TEXT NOT NULL,
-        text_content TEXT NOT NULL,
-        datetime TEXT NOT NULL
-    );
+        CREATE TABLE IF NOT EXISTS comments (
+            comment_uuid TEXT PRIMARY KEY,
+            parent_post_uuid TEXT NOT NULL,
+            author_uuid TEXT NOT NULL,
+            text_content TEXT NOT NULL,
+            datetime TEXT NOT NULL
+        );
     ''')
     print("Comments table created")
 
@@ -95,3 +95,41 @@ except Exception as e:
     if 'conn' in locals():
         conn.rollback()
         conn.close()
+
+def get_user_by_google_id(google_id):
+    con = get_db()
+    cur = con.cursor()
+    cur.execute("SELECT * FROM users WHERE google_id = %s", (google_id,))
+    row = cur.fetchone()
+    cur.close()
+    return row
+
+def update_user_google_id(user_uuid, google_id):
+    con = get_db()
+    cur = con.cursor()
+    cur.execute(
+        "UPDATE users SET google_id = %s WHERE user_uuid = %s",
+        (google_id, user_uuid)
+    )
+    con.commit()
+    cur.close()
+
+def create_user(username, email, password, about_me="", google_id=None):
+    import uuid
+    from argon2 import PasswordHasher
+    ph = PasswordHasher()
+    
+    hashed = ph.hash(password) if password else ""
+    user_uuid = str(uuid.uuid4())
+    
+    con = get_db()
+    cur = con.cursor()
+    cur.execute(
+        """INSERT INTO users 
+           (user_uuid, username, email, password, about_me, google_id, is_admin)
+           VALUES (%s, %s, %s, %s, %s, %s, 0)""",
+        (user_uuid, username, email, hashed, about_me, google_id)
+    )
+    con.commit()
+    cur.close()
+    return user_uuid

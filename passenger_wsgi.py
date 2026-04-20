@@ -8,8 +8,10 @@ sys.path.insert(0, os.path.dirname(__file__))
 from oce import create_app
 from flask import render_template, session
 from oce.utils.db_interface import close_db, get_user_by_uuid
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = create_app()
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
 @app.route('/')
 def home():

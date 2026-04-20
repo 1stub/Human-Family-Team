@@ -40,9 +40,13 @@
             <button type="submit" class="btn btn-primary w-100">Login</button>
         </form>
 
-        <p class="text-center mt-4 text-muted">
-            <small>Note: User authentication is not yet implemented.</small>
-        </p>
+        <div class="divider"><span>or</span></div>
+
+        <a href="{{ url_for('content.google.login') }}" class="btn-google">
+        <img src="https://developers.google.com/identity/images/g-logo.png" 
+            width="20" height="20" alt="Google logo">
+        Continue with Google
+        </a>
     </div>
 
 </div>

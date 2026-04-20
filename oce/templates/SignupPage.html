@@ -51,6 +51,14 @@
             <div class="form-footer">
                 <p>Already have an account? <a href="{{ url_for('content.login') }}">Sign in</a></p>
             </div>
+
+            <div class="divider"><span>or</span></div>
+
+            <a href="{{ url_for('content.google.login') }}" class="btn-google">
+            <img src="https://developers.google.com/identity/images/g-logo.png" 
+                width="20" height="20" alt="Google logo">
+            Continue with Google
+            </a>
         </form>
     </div>
 </div>

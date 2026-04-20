@@ -67,6 +67,7 @@ def create_user(
     profile_pic: bytes | None = None,
     about_me: str = "",
     is_admin: int = 0,
+    google_id: str | None = None,
 ) -> None:
     """Create a new user in the database."""
     con = get_db()
@@ -116,6 +117,21 @@ def get_user_by_username(username: str) -> DatabaseRow | None:
     cur = con.cursor()
     return cur.execute("SELECT * FROM USERS WHERE username = ?;", (username,)).fetchone()
 
+def get_user_by_google_id(google_id: str) -> DatabaseRow | None:
+    con = get_db()
+    cur = con.cursor()
+    return cur.execute(
+        "SELECT * FROM USERS WHERE google_id = ?;", (google_id,)
+    ).fetchone()
+
+def update_user_google_id(user_uuid: str, google_id: str) -> None:
+    con = get_db()
+    cur = con.cursor()
+    cur.execute(
+        "UPDATE USERS SET google_id = ? WHERE user_uuid = ?;",
+        (google_id, user_uuid)
+    )
+    con.commit()
 
 def update_user_username(user: User, username: str) -> None:
     con = get_db()
