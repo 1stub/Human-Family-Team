@@ -70,53 +70,6 @@ google_blueprint = make_google_blueprint(
 )
 content.register_blueprint(google_blueprint, url_prefix='/google_login')
 
-'''
-@content.route('/google_login/google/authorized')
-def google_callback():
-    if not google_oauth.authorized:
-        flash("Google authentication failed.", "danger")
-        return redirect(url_for('content.login'))
-
-    try:
-        resp = google_oauth.get("/oauth2/v2/userinfo")
-        if not resp.ok:
-            flash("Could not fetch Google account info.", "danger")
-            return redirect(url_for('content.login'))
-
-        info = resp.json()
-        google_id = info["id"]
-        email     = info.get("email", "")
-        name      = info.get("name", email.split("@")[0])
-
-        user = db_interface.get_user_by_google_id(google_id)
-        if not user:
-            user = get_user_by_email(email)
-
-        if user:
-            if not user.get("google_id"):
-                db_interface.update_user_google_id(user["user_uuid"], google_id)
-        else:
-            db_interface.create_user(
-                username=name,
-                email=email,
-                password="",
-                about_me="Role: student",
-                google_id=google_id
-            )
-            user = get_user_by_email(email)
-
-        session['user']      = user['username']
-        session['user_uuid'] = user['user_uuid']
-        flash(f"Welcome, {user['username']}!", "success")
-        return redirect(url_for('content.index'))
-
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        flash(f"Google login error: {e}", "danger")
-        return redirect(url_for('content.login'))
-'''
-
 @oauth_authorized.connect_via(google_blueprint)
 def google_logged_in(blueprint, token):
     if not token:
