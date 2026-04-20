@@ -23,9 +23,9 @@ def create_app():
     app.config['SESSION_PERMANENT'] = False  # Ensure session resets properly
     # Flask-Mail config goes here
     app.config.update(
-        MAIL_SERVER='smtp.gmail.com',
-        MAIL_PORT=587,
-        MAIL_USE_TLS=True,
+        MAIL_SERVER='localhost',
+        MAIL_PORT=25,
+        MAIL_USE_TLS=False,
         MAIL_USE_SSL=False,
         MAIL_USERNAME=os.environ.get('MAIL_USERNAME'),
         MAIL_PASSWORD=os.environ.get('MAIL_PASSWORD'),
