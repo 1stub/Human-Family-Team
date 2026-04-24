@@ -1,8 +1,0 @@
-h1 {
-    color: linear-gradient(#E7E596, #D6EF9C)
-}
-@media (max-width: 600px){
-    .main-container {
-        padding: 10px;
-    }
-}
