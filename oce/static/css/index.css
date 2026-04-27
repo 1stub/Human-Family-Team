@@ -213,6 +213,20 @@
   margin: 4px;
 }
 
+.button6 
+{
+  background-color: white;
+  color: #dc3545;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 35px;
+  font-family: "Londrina Solid";
+  width: 400px;
+  margin: 4px;
+}
+
 #tiles-link {
   cursor: pointer;
 }
